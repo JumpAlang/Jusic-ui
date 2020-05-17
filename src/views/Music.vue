@@ -60,7 +60,7 @@
                     <mu-col span="12" sm="12" md="4" lg="4" xl="3">
                         <mu-col :style="screenWidth < 766 && screenWidth !== 0 ? 'margin: 100px 0 0 0;': ''">
                             <div style="font-size: 24px; font-weight: 400; margin: 4px 0 10px 0; min-height: 31px;">
-                                实时聊天(QQ群:1029454474)
+                                实时聊天
                             </div>
                             <div style="font-size: 16px; font-weight: 400;">在线人数: {{online}}</div>
                             <div id="chat-container">
@@ -115,6 +115,7 @@
                                         搜索音乐
                                     </mu-chip>
                                 </div>
+				<p>交流QQ群:1029454474,欢迎过来唠嗑。</p>
                                 <p>提示：输入 “<span style="color: #009688;">点歌 歌名</span>” 即可点歌。</p>
                                 <p>例如：<span style="color: #009688;">点歌 春夏秋冬</span></p>
                                 <p>支持输入网易云音乐 ID 点歌</p>
@@ -301,7 +302,7 @@
                 let socketClient = this.$store.getters.getSocketClient;
                 let stompClient = this.$store.getters.getStompClient;
 
-                socketClient = new SockJS(baseUrl + '/server'); // new SockJS("https://www.alang.run" + '/wss');
+                socketClient = new SockJS(baseUrl + '/server'); // new SockJS("https://www.alang.run" + '/wss');//
                 stompClient = Stomp.over(socketClient);
 
                 if (isProduction) {
