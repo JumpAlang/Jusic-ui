@@ -60,7 +60,7 @@
                     <mu-col span="12" sm="12" md="4" lg="4" xl="3">
                         <mu-col :style="screenWidth < 766 && screenWidth !== 0 ? 'margin: 100px 0 0 0;': ''">
                             <div style="font-size: 24px; font-weight: 400; margin: 4px 0 10px 0; min-height: 31px;">
-                                实时聊天
+                                实时聊天(QQ群:1029454474)
                             </div>
                             <div style="font-size: 16px; font-weight: 400;">在线人数: {{online}}</div>
                             <div id="chat-container">
