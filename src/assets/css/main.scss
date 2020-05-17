@@ -1,0 +1,191 @@
+body, table, tr, td, th {
+  color: aliceblue !important;
+}
+
+.width-size-100 {
+  width: 100% !important;
+}
+
+#chat-container {
+  width: 100%;
+  min-height: 400px;
+  max-height: 400px;
+  overflow: auto;
+  //position: relative;
+}
+
+.chat-data-user {
+  //pass
+  display: block;
+}
+
+.chat-data-content {
+  display: inline-block;
+  padding: 10px;
+  max-width: calc(100% - 5px);
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.6);
+  word-break: break-word;
+}
+
+.chat-data-notice {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  padding: 2px 12px;
+  color: rgb(178, 178, 178);
+  max-width: calc(100% - 5px);
+  word-break: break-word;
+  display: inline-block;
+}
+
+.chat-message {
+  //color: aliceblue !important;
+  margin-bottom: 0 !important;
+}
+
+.mu-text-field-input {
+  color: aliceblue !important;
+}
+
+.chat-quick-bar {
+  padding: 10px 0;
+  color: #009688;
+  font-size: 14px;
+
+  span {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 1px;
+  }
+}
+
+#blur {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -99;
+  overflow: hidden;
+  filter: blur(20px);
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.message-input-group {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 99;
+  left: 0;
+  padding: 12px 12px 12px 12px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/**
+ * 定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸
+ * 暂未解决火狐浏览器的滚动条，以下参考：
+ * https://developer.mozilla.org/zh-CN/docs/Web/CSS/::-webkit-scrollbar
+ * https://stackoverflow.com/questions/6165472/custom-css-scrollbar-for-firefox/54101063#54101063
+ */
+::-webkit-scrollbar {
+  width: 5px; /*滚动条宽度*/
+  height: 5px; /*滚动条高度*/
+}
+
+/*
+ * 定义滚动条轨道 内阴影+圆角
+ */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px; /*滚动条的背景区域的圆角*/
+  background-color: #bdbdbd; /*滚动条的背景颜色*/
+}
+
+/*
+ * 定义滑块 内阴影+圆角
+ */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px; /*滚动条的圆角*/
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #009688; /*滚动条的背景颜色*/
+}
+
+.mu-dialog {
+  background-color: #263238 !important;
+  opacity: 0.9;
+
+  .mu-dialog-body {
+    max-width: 856px;
+    max-height: 493px;
+    overflow: auto;
+  }
+
+  * {
+    color: aliceblue !important;
+  }
+
+  .mu-text-field-input {
+    text-align: center;
+  }
+
+  .mu-input-line, .mu-input-focus-line, .material-icons {
+    color: #009688 !important;
+  }
+
+  .search_pick_btn {
+    background-color: #009688 !important;
+    display: block;
+    padding: 5px 0;
+    cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+  }
+
+  .search_pick_btn:hover {
+    background-color: #1ea296 !important;
+  }
+
+  .search_pick_btn_disable {
+    background-color: #3f494e !important;
+    display: block;
+    padding: 5px 0;
+    cursor: not-allowed;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+  }
+
+  .justify-content-start div {
+    margin: 0 auto;
+  }
+}
+
+.mu-pagination-item.mu-button.is-current {
+  background-color: #009688 !important;
+}
+
+.mu-snackbar {
+  opacity: 0.9;
+  background-color: #263238 !important;
+  color: aliceblue !important;
+
+  .mu-snackbar-message {
+    margin: 0 auto;
+  }
+}
+
+#search-picture {
+  .mu-dialog .justify-content-start div {
+    margin: initial !important;
+  }
+
+  .d-flex.flex-row.justify-content-center.align-items-start {
+    margin: 0 auto !important;
+  }
+}
+
+.mu-radio-label{
+  color:white !important;
+}
