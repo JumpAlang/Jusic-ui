@@ -139,8 +139,9 @@
                 <img :src="music.pictureUrl" alt="blur-img">
             </div>
             <div>
-                <audio id="music" :src="music.url" @timeupdate="musicTimeUpdate" controls="" autoplay="autoplay"
+                <audio id="music" :src="music.url" @timeupdate="musicTimeUpdate" controls="" autoplay="autoplay"  @canplaythrough="nextSong"
                        style="display: none"></audio>
+		 <audio id="music2" :src="music2.url" style="display: none"></audio>
             </div>
         </div>
         <div id="play" v-if="!isPlay" style="position: fixed; width: 100%; height:100%">
@@ -160,6 +161,7 @@
 			<mu-radio :value="'wy'" v-model="source" color="primary" :label="'网易'"></mu-radio>
 			<mu-radio :value="'qq'" v-model="source" color="primary" :label="'QQ'"></mu-radio>
 			<mu-radio :value="'mg'" v-model="source" color="primary" :label="'咪咕'"></mu-radio>
+			<mu-radio :value="'lz'" v-model="source" color="primary" :label="'禁歌'"></mu-radio>
                     </mu-col>
                     <mu-col span="1">
                         <mu-button class="search_btn" icon @click="search">
@@ -246,7 +248,8 @@
 		good:'isSocketGood',
                 searchKeyword: 'getSearchKeyword',
                 searchData: 'getSearchData',
-                searchCount: 'getSearchCount'
+                searchCount: 'getSearchCount',
+		music2:'getMusic2'
             }),
             ...mapMutations({
                 // volume: 'setPlayerVolume'
@@ -289,7 +292,9 @@
             pageCount: 7,
             openPictureSearch: false,
 	    source:"wy",
-	    sourceChat:"wy"
+	    sourceChat:"wy",
+	    secondUrl:"",
+	    firstLoaded:0
         }),
         methods: {
             play: function () {
@@ -604,20 +609,31 @@
 			    	this.$store.commit('setSocketGood', false);
 			    }
 			   // this.$forceUpdate();
+			
 			    break;
                         case messageUtils.messageType.PICK:
 			    if(messageContent.message == "goodlist"){
 			    	this.$store.commit('setSocketGood', true);
 			    }
                             this.$store.commit('setPlayerPick', messageContent.data);
+			     if(messageContent.data.length > 1){
+			     	this.secondUrl = messageContent.data[1].url;
+				//console.log("this.firstLoaded"+this.firstLoaded);
+				if(this.firstLoaded == 1){
+				    this.$store.commit('setMusic2', {"url":this.secondUrl});
+				}
+			     }
                             break;
 			case messageUtils.messageType.VOLUMN:
-			     console.log(messageContent.data);
+			     //console.log(messageContent.data);
 			     music.volume = Number(messageContent.data) / 100;
 			     this.$store.commit('setPlayerVolume', messageContent.data);
+			     
 			     break;
                         case messageUtils.messageType.MUSIC:
+			    this.firstLoaded = 0;
                             this.$store.commit('setPlayerMusic', messageContent.data);
+			    document.querySelector('#music').preload = "auto";
                             if (messageContent.data.lyric === undefined
                                 || typeof (messageContent.data.lyric) === 'undefined'
                                 || messageContent.data.lyric === null
@@ -758,7 +774,15 @@
             },
             formatterTime: function(value) {
                 return timeUtils.secondsToHH_mm_ss(value)
-            }
+            },
+	    nextSong:function(e){
+		this.firstLoaded=1;
+		this.$store.commit('setMusic2', {"url":this.secondUrl});
+		//document.querySelector('#music2').src = this.secondUrl;
+
+		//console.log(this.secondUrl);
+		//console.log("第二首");
+	    }
         },
         watch: {
             '$store.state.player.music': function (newValue, oldValue) {

@@ -23,7 +23,8 @@ export default new Vuex.Store({
             lyric: '',
             volume: localStorage.getItem('VOLUME') ? Number(localStorage.getItem('VOLUME')) : 10,
             progress: 0,
-            time: '00:00 / 00:00'
+            time: '00:00 / 00:00',
+			music2:{}
         },
         chat: {
             data: [],
@@ -79,6 +80,9 @@ export default new Vuex.Store({
 		},
         getPlayerMusic: state => {
             return state.player.music;
+        },
+		getMusic2: state => {
+            return state.player.music2;
         },
         getPlayerLyrics: state => {
             return state.player.lyrics;
@@ -154,6 +158,9 @@ export default new Vuex.Store({
         },
         setPlayerMusic: (state, value) => {
             state.player.music = value;
+        },
+		setMusic2: (state, value) => {
+            state.player.music2 = value;
         },
         setPlayerLyrics: (state, value) => {
             state.player.lyrics = value;
