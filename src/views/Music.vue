@@ -158,10 +158,10 @@
                                        placeholder="请输入关键字搜索..."
                                        color="#009688"
                                        class="width-size-100" style="text-align: center"></mu-text-field>
-			<mu-radio :value="'wy'" v-model="source" color="primary" :label="'网易'"></mu-radio>
-			<mu-radio :value="'qq'" v-model="source" color="primary" :label="'QQ'"></mu-radio>
-			<mu-radio :value="'mg'" v-model="source" color="primary" :label="'咪咕'"></mu-radio>
-			<mu-radio :value="'lz'" v-model="source" color="primary" :label="'禁歌'"></mu-radio>
+			<mu-radio :value="'wy'" v-model="source" color="primary" :label="'网易'" class="searchradio"></mu-radio>
+			<mu-radio :value="'qq'" v-model="source" color="primary" :label="'QQ'" class="searchradio"></mu-radio>
+			<mu-radio :value="'mg'" v-model="source" color="primary" :label="'咪咕'" class="searchradio"></mu-radio>
+			<mu-radio :value="'lz'" v-model="source" color="primary" :label="'禁歌'" class="searchradio"></mu-radio>
                     </mu-col>
                     <mu-col span="1">
                         <mu-button class="search_btn" icon @click="search">
