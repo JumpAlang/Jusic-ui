@@ -4,7 +4,7 @@
             <mu-button icon slot="left" @click="isOpenDrawer=!isOpenDrawer">
                 <mu-icon value="menu"></mu-icon>
             </mu-button>
-            一起听歌吧
+           {{musichouse}}
         </mu-appbar>
         <mu-drawer width="300" :open.sync="isOpenDrawer" :docked="false" :right="false">
             <mu-card style="width: 100%; max-width: 375px; margin: 0 auto;">
@@ -42,9 +42,15 @@
 <script>
     export default {
         name: "Navigation",
+	props:{
+	   musichouse:String
+	},
         data: () => ({
             isOpenDrawer: false
-        })
+        }),
+	methods:{
+		
+	}
     }
 </script>
 

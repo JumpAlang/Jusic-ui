@@ -57,7 +57,10 @@ export let messageUtils = {
         SEARCH: 'SEARCH',
         SEARCH_PICTURE: 'SEARCH_PICTURE',
 		VOLUMN:'VOLUMN',
-		GOODMODEL:'GOODMODEL'
+		GOODMODEL:'GOODMODEL',
+        SEARCH_HOUSE:'SEARCH_HOUSE',
+        ENTER_HOUSE:"ENTER_HOUSE",
+        ADD_HOUSE:"ADD_HOUSE"
     },
     isKnowMessageType: {},
     parseMessageType: {},

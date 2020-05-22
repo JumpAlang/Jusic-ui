@@ -7,6 +7,10 @@ import 'muse-ui/dist/muse-ui.css';
 import theme from 'muse-ui/lib/theme';
 import * as colors from 'muse-ui/lib/theme/colors';
 import Toast from 'muse-ui-toast';
+import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
+import Loading from 'muse-ui-loading';
+
+
 // import 'typeface-roboto'
 // import './scrollbar'
 
@@ -22,6 +26,7 @@ theme.add('custom-theme', {
 });
 theme.use('custom-theme');
 Vue.use(MuseUI);
+Vue.use(Loading);
 
 Vue.use(Toast, {
   position: 'top',               // 弹出的位置
