@@ -953,6 +953,7 @@ export default {
                 content: messageContent.message,
                 type: "notice"
               });
+	      this.$toast.message(messageContent.message);
             }
             break;
           case messageUtils.messageType.CHAT:
@@ -1247,6 +1248,10 @@ export default {
       },
       clearScr(){
       	document.getElementById('chat-container').innerHTML='';
+      },
+      setCurrentTime(){
+	console.log(this.music.pushTime);
+      	document.querySelector("#music").currentTime= (Date.now() - this.music.pushTime) / 1000;
       }
   },
   watch: {
@@ -1266,7 +1271,7 @@ export default {
       });
       setTimeout(function() {
         _this.albumRotate = true;
-        if (newValue.pushTime) {
+       if (newValue.pushTime) {
           document.querySelector("#music").currentTime =
             (Date.now() - newValue.pushTime) / 1000;
         }
