@@ -12,6 +12,7 @@
     "classlist-polyfill": "^1.2.0",
     "core-js": "^3.4.3",
     "muse-ui-loading": "^0.2.0",
+    "muse-ui-message": "^0.2.1",
     "muse-ui-toast": "^0.3.0",
     "typeface-roboto": "0.0.75",
     "vue": "^2.6.10",

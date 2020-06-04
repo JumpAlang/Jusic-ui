@@ -35,31 +35,23 @@
                 <mu-col span="12" sm="12" md="7" lg="8" xl="9">
                   <div
                     style="font-size: 24px; font-weight: 400; margin: 4px 0 10px 0; min-height: 31px;"
-                  >
-                    {{ music ? music.name : "" }}
-                  </div>
-                  <div
-                    style="font-size: 16px; font-weight: 400; margin: 10px 0; min-height: 21px;"
-                  >
+                  >{{ music ? music.name : "" }}</div>
+                  <div style="font-size: 16px; font-weight: 400; margin: 10px 0; min-height: 21px;">
                     专辑: &nbsp;{{
-                      music.album ? "《" + music.album.name + "》" : ""
+                    music.album ? "《" + music.album.name + "》" : ""
                     }}
                     歌手: &nbsp;{{ music ? music.artist : "" }}
                   </div>
 
                   <div
                     style="font-size: 14px; font-weight: 400; margin: 50px 0 10px 0; min-height: 21px;"
-                  >
-                    {{ lyric }}
-                  </div>
-                  <small id="musicEndTime" style="float: right">{{
+                  >{{ lyric }}</div>
+                  <small id="musicEndTime" style="float: right">
+                    {{
                     playerTime
-                  }}</small>
-                  <mu-linear-progress
-                    mode="determinate"
-                    :value="progress"
-                    color="#009688"
-                  ></mu-linear-progress>
+                    }}
+                  </small>
+                  <mu-linear-progress mode="determinate" :value="progress" color="#009688"></mu-linear-progress>
                   <mu-slider
                     class="demo-slider"
                     color="#009688"
@@ -84,27 +76,24 @@
                       class="search_pick_btn"
                       @click="goodMusic(scope.row)"
                       v-if="scope.$index != 0 && good"
-                      >点赞</a
-                    >
+                    >点赞</a>
                     {{
-                      isRoot || isAdmin
-                        ? scope.row.name + `[${scope.row.id}]`
-                        : scope.row.name
+                    isRoot || isAdmin
+                    ? scope.row.name + `[${scope.row.id}]`
+                    : scope.row.name
                     }}
                   </td>
                   <td class="is-center">{{ scope.row.artist }}</td>
-                  <td class="is-center">
-                    {{ "《" + scope.row.album.name + "》" }}
-                  </td>
+                  <td class="is-center">{{ "《" + scope.row.album.name + "》" }}</td>
                   <!--                                    <td class="is-center">{{scope.row.nickName + scope.row.sessionId?`[${scope.row.sessionId}]`: '[]'}}</td>-->
                   <td class="is-center">
                     {{
-                      isRoot || isAdmin
-                        ? scope.row.nickName +
-                          (scope.row.sessionId
-                            ? `[${scope.row.sessionId}]`
-                            : "")
-                        : scope.row.nickName
+                    isRoot || isAdmin
+                    ? scope.row.nickName +
+                    (scope.row.sessionId
+                    ? `[${scope.row.sessionId}]`
+                    : "")
+                    : scope.row.nickName
                     }}
                   </td>
                 </template>
@@ -123,15 +112,11 @@
                 style="font-size: 24px; font-weight: 400; margin: 4px 0 10px 0; min-height: 31px;"
               >
                 实时聊天
-                <mu-chip
-                  color="green" 
-                  @click="openHouse = !openHouse"
-                >
-                  房间
-                </mu-chip>
+                <mu-chip color="green" @click="openHouse = !openHouse">房间</mu-chip>
               </div>
               <div style="font-size: 16px; font-weight: 400;">
-                在线人数: {{ online }}<span style="float:right;cursor:pointer;color:gray;" @click="clearScr">清屏</span>
+                在线人数: {{ online }}
+                <span style="float:right;cursor:pointer;color:gray;" @click="clearScr">清屏</span>
               </div>
               <div id="chat-container">
                 <div
@@ -140,11 +125,13 @@
                   style="padding: 10px 0"
                 >
                   <div>
-                    <small class="chat-data-user">{{
+                    <small class="chat-data-user">
+                      {{
                       (isRoot || isAdmin) && item.type === "chat"
-                        ? item.nickName + `[${item.sessionId}]`
-                        : item.nickName
-                    }}</small>
+                      ? item.nickName + `[${item.sessionId}]`
+                      : item.nickName
+                      }}
+                    </small>
                   </div>
                   <div v-if="item.type === 'notice'">
                     <span class="chat-data-notice">{{ item.content }}</span>
@@ -155,7 +142,7 @@
                       v-if="item.images.length > 0"
                       v-for="(img, index) in item.images"
                       :src="img"
-                      alt=""
+                      alt
                       style="width: 100%; display: block"
                     />
                   </div>
@@ -178,24 +165,9 @@
                 ></mu-text-field>
                 <br />
                 <div style="color:white;">
-                  <mu-radio
-                    :value="'wy'"
-                    v-model="sourceChat"
-                    color="primary"
-                    :label="'网易'"
-                  ></mu-radio>
-                  <mu-radio
-                    :value="'qq'"
-                    v-model="sourceChat"
-                    color="primary"
-                    :label="'QQ'"
-                  ></mu-radio>
-                  <mu-radio
-                    :value="'mg'"
-                    v-model="sourceChat"
-                    color="primary"
-                    :label="'咪咕'"
-                  ></mu-radio>
+                  <mu-radio :value="'wy'" v-model="sourceChat" color="primary" :label="'网易'"></mu-radio>
+                  <mu-radio :value="'qq'" v-model="sourceChat" color="primary" :label="'QQ'"></mu-radio>
+                  <mu-radio :value="'mg'" v-model="sourceChat" color="primary" :label="'咪咕'"></mu-radio>
                 </div>
 
                 <mu-button
@@ -203,17 +175,13 @@
                   @click="connect"
                   color="primary"
                   style="width: 100%"
-                >
-                  连接服务器
-                </mu-button>
+                >连接服务器</mu-button>
                 <mu-button
                   v-if="isContented"
                   @click="sendHandler"
                   color="primary"
                   style="width: 100%"
-                >
-                  发送消息
-                </mu-button>
+                >发送消息</mu-button>
               </div>
             </mu-col>
             <mu-col style="margin-bottom: 160px; ">
@@ -223,102 +191,92 @@
                   <mu-chip
                     color="rgba(0, 150, 136, 0.5)"
                     @click="openPictureSearch = !openPictureSearch"
-                  >
-                    搜索图片
-                  </mu-chip>
-                  <mu-chip
-                    color="rgba(0, 150, 136, 0.5)"
-                    @click="musicSkipVote"
-                  >
-                    投票切歌
-                  </mu-chip>
-                  <mu-chip
-                    color="rgba(0, 150, 136, 0.5)"
-                    @click="openSearch = !openSearch"
-                  >
-                    搜索音乐
-                  </mu-chip>
+                  >搜索图片</mu-chip>
+                  <mu-chip color="rgba(0, 150, 136, 0.5)" @click="musicSkipVote">投票切歌</mu-chip>
+                  <mu-chip color="rgba(0, 150, 136, 0.5)" @click="openSearch = !openSearch">搜索音乐</mu-chip>
                 </div>
                 <p>交流QQ群:1029454474,欢迎过来唠嗑。</p>
                 <p>
-                  提示：输入 “<span style="color: #009688;">点歌 歌名</span>”
+                  提示：输入 “
+                  <span style="color: #009688;">点歌 歌名</span>”
                   即可点歌。
                 </p>
-                <p>例如：<span style="color: #009688;">点歌 春夏秋冬</span></p>
+                <p>
+                  例如：
+                  <span style="color: #009688;">点歌 春夏秋冬</span>
+                </p>
                 <p>支持输入网易云音乐 ID 点歌</p>
                 <p>
-                  没有想要点的音乐？ 快试一试 “<span
+                  没有想要点的音乐？ 快试一试 “
+                  <span
                     @click="openSearch = !openSearch"
                     style="cursor: pointer; color: #009688;"
-                    >[搜索音乐]</span
-                  >” 吧
+                  >[搜索音乐]</span>” 吧
                 </p>
                 <br />
                 <p>
-                  如点错歌曲可以输入 “<span style="color: #009688;"
-                    >删除音乐 歌名</span
-                  >” 即可删除歌曲，管理员可以使用歌曲id删除。
+                  如点错歌曲可以输入 “
+                  <span style="color: #009688;">删除音乐 歌名</span>” 即可删除歌曲，管理员可以使用歌曲id删除。
                 </p>
                 <br />
                 <p>
-                  如遇不好听的歌可以输入 “<span style="color: #009688;"
-                    >投票切歌</span
-                  >” 或者点击 “<span
-                    @click="musicSkipVote"
-                    style="cursor: pointer; color: #009688;"
-                    >[投票切歌]</span
-                  >”，当投票人数大于在线人数 30% 时将会切歌。
+                  如遇不好听的歌可以输入 “
+                  <span style="color: #009688;">投票切歌</span>” 或者点击 “
+                  <span @click="musicSkipVote" style="cursor: pointer; color: #009688;">[投票切歌]</span>”，当投票人数大于在线人数 30% 时将会切歌。
                 </p>
                 <br />
                 <p>
-                  输入 “<span style="color: #009688;">设置昵称 名字</span>”
+                  输入 “
+                  <span style="color: #009688;">设置昵称 名字</span>”
                   可以设置自己的显示昵称，仅限当前客户端有效。
                 </p>
                 <p>
-                  想要斗图？ ┏ (゜ω゜)=☞ “<span
+                  想要斗图？ ┏ (゜ω゜)=☞ “
+                  <span
                     @click="openPictureSearch = !openPictureSearch"
                     style="cursor: pointer; color: #009688;"
-                    >[搜索图片]</span
-                  >”
+                  >[搜索图片]</span>”
                 </p>
-		<br/>
-		 <p>
+                <br />
+                <p>
                   <span style="color: orange;">管理员功能</span>
-		 </p>
-		  <p>：登录： “<span style="color: #009688;"
-                    >admin 123456</span>” 。
-		    修改密码： “<span style="color: #009688;"
-                    >修改密码 123456</span>” 。
-		     点赞模式（歌曲列表按点赞数排序）： “<span style="color: #009688;"
-                    >点赞模式</span>” 退出则“<span style="color: #009688;"
-                    >退出点赞模式</span>” 。
-		    修改投票切歌率： “<span style="color: #009688;"
-                    >投票切歌率 1</span>” 数值在(0,1]。
-		     禁止切歌：“<span style="color: #009688;"
-                    >禁止切歌</span>” 启用则“<span style="color: #009688;"
-                    >启用切歌</span>” 。
-		     禁止点歌：“<span style="color: #009688;"
-                    >禁止点歌</span>” 启用则“<span style="color: #009688;"
-                    >启用点歌</span>” 。
-		    清空列表：“<span style="color: #009688;"
-                    >清空列表</span>” 。
-		    置顶音乐： “<span style="color: #009688;"
-                    >置顶音乐 音乐id</span>” 音乐id即歌曲列表中歌曲后面那一串字母，如411214279。
-		    拉黑音乐：“<span style="color: #009688;"
-                    >拉黑音乐 音乐id</span>” 漂白则“<span style="color: #009688;"
-                    >漂白音乐 音乐id</span>” 。
-		    音乐黑名单： “<span style="color: #009688;"
-                    >音乐黑名单</span>” 。
-		     拉黑用户：“<span style="color: #009688;"
-                    >拉黑用户 用户id</span>” 漂白则“<span style="color: #009688;"
-                    >漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。
-		    用户黑名单： “<span style="color: #009688;"
-                    >用户黑名单</span>” 。
+                </p>
+                <p>
+                  ：登录： “
+                  <span style="color: #009688;">admin 123456</span>” 。
+                  修改密码： “
+                  <span style="color: #009688;">修改密码 123456</span>” 。
+                  点赞模式（歌曲列表按点赞数排序）： “
+                  <span style="color: #009688;">点赞模式</span>” 退出则“
+                  <span style="color: #009688;">退出点赞模式</span>” 。
+                  修改投票切歌率： “
+                  <span style="color: #009688;">投票切歌率 1</span>” 数值在(0,1]。
+                  禁止切歌：“
+                  <span style="color: #009688;">禁止切歌</span>” 启用则“
+                  <span style="color: #009688;">启用切歌</span>” 。
+                  禁止点歌：“
+                  <span style="color: #009688;">禁止点歌</span>” 启用则“
+                  <span style="color: #009688;">启用点歌</span>” 。
+                  清空列表：“
+                  <span style="color: #009688;">清空列表</span>” 。
+                  置顶音乐： “
+                  <span style="color: #009688;">置顶音乐 音乐id</span>” 音乐id即歌曲列表中歌曲后面那一串字母，如411214279。
+                  拉黑音乐：“
+                  <span style="color: #009688;">拉黑音乐 音乐id</span>” 漂白则“
+                  <span style="color: #009688;">漂白音乐 音乐id</span>” 。
+                  音乐黑名单： “
+                  <span style="color: #009688;">音乐黑名单</span>” 。
+                  拉黑用户：“
+                  <span style="color: #009688;">拉黑用户 用户id</span>” 漂白则“
+                  <span style="color: #009688;">漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。
+                  用户黑名单： “
+                  <span style="color: #009688;">用户黑名单</span>” 。
                 </p>
                 <br />
                 <p>
                   如果有什么好的想法、建议或问题可以单项向管理员发送消息，（＾∀＾●）ﾉｼ
-                  “<span style="color: #009688;">@管理员 内容</span>”,
+                  “
+                  <span style="color: #009688;">@管理员 内容</span>”,
                   空格隔开哦!
                 </p>
                 <p>另外也可以在项目仓库开个 issue 进行公开讨论</p>
@@ -335,7 +293,7 @@
           id="music"
           :src="music.url"
           @timeupdate="musicTimeUpdate"
-          controls=""
+          controls
           autoplay="autoplay"
           @canplaythrough="nextSong"
           style="display: none"
@@ -343,12 +301,8 @@
         <audio id="music2" :src="music2.url" style="display: none"></audio>
       </div>
     </div>
-    <div
-      id="play"
-      v-if="!isPlay"
-      style="position: fixed; width: 100%; height:100%"
-    >
-  <mu-button color="success" style="float:right"  @click="play">多房间版本V1.0</mu-button>
+    <div id="play" v-if="!isPlay" style="position: fixed; width: 100%; height:100%">
+      <mu-button color="success" style="float:right" @click="play">多房间版本V1.0</mu-button>
       <mu-icon
         @click="play"
         value="play_circle_filled"
@@ -422,19 +376,12 @@
               <!--</mu-tooltip>-->
               <!--</td>-->
               <td class="is-left">
-                <a
-                  v-if="showPickButton(scope.row.privilege)"
-                  @click="pickMusic(scope.row)"
-                >
+                <a v-if="showPickButton(scope.row.privilege)" @click="pickMusic(scope.row)">
                   <mu-avatar size="20" slot="avatar">
                     <img src="../assets/images/play.png" />
                   </mu-avatar>
                 </a>
-                <mu-avatar
-                  size="20"
-                  slot="avatar"
-                  v-if="!showPickButton(scope.row.privilege)"
-                >
+                <mu-avatar size="20" slot="avatar" v-if="!showPickButton(scope.row.privilege)">
                   <mu-tooltip content="当前音乐不能点播">
                     <img src="../assets/images/noplay.png" />
                   </mu-tooltip>
@@ -442,12 +389,8 @@
                 {{ scope.row.name }}
               </td>
               <td class="is-center">{{ scope.row.artist }}</td>
-              <td class="is-center">
-                {{ "《" + scope.row.album.name + "》" }}
-              </td>
-              <td class="is-center">
-                {{ formatterTime(scope.row.duration / 1000) }}
-              </td>
+              <td class="is-center">{{ "《" + scope.row.album.name + "》" }}</td>
+              <td class="is-center">{{ formatterTime(scope.row.duration / 1000) }}</td>
             </template>
           </mu-data-table>
         </mu-row>
@@ -475,34 +418,42 @@
       :open.sync="openHouse"
     >
       <mu-appbar color="primary" title="房间">
-        <mu-button slot="right" flat @click="closeHouse">
-          X
-        </mu-button>
+        <mu-button slot="right" flat @click="closeHouse">X</mu-button>
       </mu-appbar>
       <mu-form :model="house" class="mu-demo-form" align="center">
+        <mu-text-field v-model="house.name" placeholder="房间名称"></mu-text-field>
+        <mu-text-field v-model="house.desc" placeholder="房间描述"></mu-text-field>
         <mu-text-field
-          v-model="house.name"
-          placeholder="房间名称"
+          v-if="house.needPwd"
+          placeholder="房间密码"
+          v-model="house.password"
+          :action-icon="visibility ? 'visibility_off' : 'visibility'"
+          :action-click="() => (visibility = !visibility)"
+          :type="visibility ? 'text' : 'password'"
         ></mu-text-field>
-        <mu-text-field  v-model="house.desc"
-          placeholder="房间描述"
-        ></mu-text-field>
-          <div align="center">
-              <mu-button color="primary" @click="createHouse">创建房间</mu-button>
-          </div>
-      </mu-form>
-        <div align="center" style="padding-top:30px;">
+        <mu-switch v-model="house.needPwd" color="primary" label="密码"></mu-switch>
 
-            <span v-for="house, index in houses" :key="house.id" @click="enterHouse(house.id,house.name)">
-                      <mu-tooltip :content="house.desc">
-            <mu-chip class="demo-chip" color="teal" style="margin:10px;">
-                <mu-avatar text-color="blue300" style="background-color:#000000;opacity: 0.5;"color="orange" :size="32">{{house.name.substring(0,2)}}</mu-avatar>{{house.name.substring(2)}}
+        <div align="center">
+          <mu-button color="primary" @click="createHouse">创建房间</mu-button>
+        </div>
+      </mu-form>
+      <div align="center" style="padding-top:30px;">
+        <span
+          v-for="house, index in houses"
+          :key="house.id"
+          @click="enterHouse(house.id,house.name,house.needPwd)"
+        >
+          <mu-tooltip :content="house.desc">
+            <mu-chip class="demo-chip" color="teal">
+              <mu-avatar :size="32" color="blue300">
+                <mu-icon :value="house.needPwd?'lock':'lock_open'"></mu-icon>
+              </mu-avatar>
+              {{house.name}}
             </mu-chip>
           </mu-tooltip>
-            </span>
-        </div>
+        </span>
+      </div>
     </mu-dialog>
-
   </div>
 </template>
 
@@ -584,12 +535,14 @@ export default {
     openPictureSearch: false,
     source: "wy",
     sourceChat: "wy",
-    house: { name: "", desc: "" },
+    house: { name: "", desc: "", password: "", needPwd: false },
     secondUrl: "",
     firstLoaded: 0,
-      houses:[],
-      musichouse:"一起听歌吧",
-      loading:{}
+    houses: [],
+    musichouse: "一起听歌吧",
+    loading: {},
+    houseForward: "",
+    visibility: false
   }),
   methods: {
     play: function() {
@@ -662,8 +615,12 @@ export default {
       let stompClient = this.$store.getters.getStompClient;
 
       stompClient.subscribe("/topic/chat", response => {
-        // console.log('来自 /topic/chat 频道的消息', response);
-        this.$store.commit("pushChatData", JSON.parse(response.body).data);
+        console.log("来自 /topic/chat 频道的消息", response);
+        let body = JSON.parse(response.body);
+        if (body.code == "20000") {
+          this.$toast.message(body.data);
+        }
+        //this.$store.commit("pushChatData", .data);
       });
 
       stompClient.subscribe("/topic/music/order", response => {
@@ -714,6 +671,14 @@ export default {
             // console.log('请输入昵称', chatMessage)
           } else {
             this.settingName(content);
+          }
+          break;
+        case "公告":
+          content = sendUtils.parseContent(instruction, chatMessage);
+          if (content === "") {
+            // console.log('请输入公告', chatMessage)
+          } else {
+            stompClient.send("/chat/notice/" + content, {}, JSON.stringify({}));
           }
           break;
         case "root":
@@ -953,7 +918,7 @@ export default {
                 content: messageContent.message,
                 type: "notice"
               });
-	      this.$toast.message(messageContent.message);
+              this.$toast.message(messageContent.message);
             }
             break;
           case messageUtils.messageType.CHAT:
@@ -1030,34 +995,37 @@ export default {
             if (Number(messageContent.code) === 20000) {
               this.$store.commit("setSocketRoot", true);
               // console.log('root success')
-            }else{
-	        this.$store.commit("setSocketRoot", false);
-	    }
+            } else {
+              this.$store.commit("setSocketRoot", false);
+            }
             break;
-            case messageUtils.messageType.ENTER_HOUSE:
-	        this.loading.close();
-                if (Number(messageContent.code) === 20000) {
-                    // console.log('root success')
-                    this.openHouse = false;
-                    document.querySelectorAll(".mu-tooltip").forEach(el=>el.style.display="none");
-                }else{
-		     this.$toast.message(messageContent.message);
-		    this.getHouses();
-
-		}
-                break;
-            case messageUtils.messageType.ADD_HOUSE:
-		this.loading.close();
-                if (Number(messageContent.code) === 20000) {
-                    // console.log('root success')
-                    this.openHouse = false;
-                    document.querySelectorAll(".mu-tooltip").forEach(el=>el.style.display="none");
-
-                }else{
-                    this.$toast.message(messageContent.message);
-
-                }
-                break;
+          case messageUtils.messageType.ENTER_HOUSE:
+            this.loading.close();
+            if (Number(messageContent.code) === 20000) {
+              this.musichouse = this.houseForward;
+              // console.log('root success')
+              this.openHouse = false;
+              document
+                .querySelectorAll(".mu-tooltip")
+                .forEach(el => (el.style.display = "none"));
+            } else {
+              this.$toast.message(messageContent.message);
+              this.getHouses();
+            }
+            break;
+          case messageUtils.messageType.ADD_HOUSE:
+            this.loading.close();
+            if (Number(messageContent.code) === 20000) {
+              this.musichouse = this.house.name;
+              // console.log('root success')
+              this.openHouse = false;
+              document
+                .querySelectorAll(".mu-tooltip")
+                .forEach(el => (el.style.display = "none"));
+            } else {
+              this.$toast.message(messageContent.message);
+            }
+            break;
           case messageUtils.messageType.AUTH_ADMIN:
             this.$store.commit("pushChatData", {
               content: messageContent.message,
@@ -1066,9 +1034,9 @@ export default {
             if (Number(messageContent.code) === 20000) {
               this.$store.commit("setSocketAdmin", true);
               // console.log('admin success')
-            }else{
+            } else {
               this.$store.commit("setSocketAdmin", false);
-	    }
+            }
             break;
           case messageUtils.messageType.SETTING_NAME:
             this.$store.commit("pushChatData", {
@@ -1081,9 +1049,9 @@ export default {
             this.$store.commit("setSearchCount", messageContent.data.totalSize);
             this.$store.commit("setSearchData", messageContent.data.data);
             break;
-            case messageUtils.messageType.SEARCH_HOUSE:
-                this.houses= messageContent.data;
-                break;
+          case messageUtils.messageType.SEARCH_HOUSE:
+            this.houses = messageContent.data;
+            break;
           case messageUtils.messageType.SEARCH_PICTURE:
             this.$store.commit(
               "setSearchPictureCount",
@@ -1123,7 +1091,7 @@ export default {
         "/music/search",
         {},
         JSON.stringify({
-          name: this.$store.getters.getSearchKeyword,
+          name: this.$store.getters.getSearchKeyword.trim(),
           sendTime: Date.now(),
           source: this.source,
           pageIndex: this.current,
@@ -1214,52 +1182,74 @@ export default {
       this.openHouse = false;
     },
     createHouse() {
-           this.loading = this.$loading({  overlayColor: 'hsla(0, 0%, 100%, .5)'});
-        let stompClient = this.$store.getters.getStompClient;
-        stompClient.send(
-            "/house/add",
-            {},
-            JSON.stringify({
-                name: this.house.name,
-                desc: this.house.desc
-            })
-        );
-	this.musichouse=this.house.name;
+      this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
+      let stompClient = this.$store.getters.getStompClient;
+      stompClient.send(
+        "/house/add",
+        {},
+        JSON.stringify({
+          name: this.house.name,
+          desc: this.house.desc,
+          needPwd:this.house.needPwd,
+          password:this.house.password
+        })
+      );
     },
-      enterHouse(id,name){
-       this.loading = this.$loading({  overlayColor: 'hsla(0, 0%, 100%, .5)'});
-     
-      	  this.musichouse=name;
-          let stompClient = this.$store.getters.getStompClient;
-          stompClient.send(
-              "/house/enter/"+id,
-              {},
-              JSON.stringify({
-              })
-          );
-      },
-      getHouses(){
-          let stompClient = this.$store.getters.getStompClient;
-          stompClient.send(
-              "/house/search",
-              {},
-              JSON.stringify({})
-          );
-      },
-      clearScr(){
-      	document.getElementById('chat-container').innerHTML='';
-      },
-      setCurrentTime(){
-	console.log(this.music.pushTime);
-      	document.querySelector("#music").currentTime= (Date.now() - this.music.pushTime) / 1000;
+    enterHouse(id, name, needPwd) {
+      if (needPwd) {
+        this.$prompt("", "请输入房间密码", {
+          validator(value) {
+            return {
+              valid: value != "",
+              message: "密码不能为空"
+            };
+          }
+        }).then(({ result, value }) => {
+          if (result) {
+            this.houseEnter(id, name, value);
+          } else {
+            //this.$toast.message('点击了取消');
+          }
+        });
+      } else {
+        console.log(name);
+        this.houseEnter(id, name, "");
       }
+    },
+    houseEnter(id, name, pwd) {
+      this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
+
+      console.log(name);
+      this.houseForward = name;
+      let stompClient = this.$store.getters.getStompClient;
+      stompClient.send(
+        "/house/enter",
+        {},
+        JSON.stringify({
+          id: id,
+          password: pwd
+        })
+      );
+    },
+    getHouses() {
+      let stompClient = this.$store.getters.getStompClient;
+      stompClient.send("/house/search", {}, JSON.stringify({}));
+    },
+    clearScr() {
+      document.getElementById("chat-container").innerHTML = "";
+    },
+    setCurrentTime() {
+      console.log(this.music.pushTime);
+      document.querySelector("#music").currentTime =
+        (Date.now() - this.music.pushTime) / 1000;
+    }
   },
   watch: {
-      openHouse:function(newOpenHouse,oldOpenHouse){
-        if(newOpenHouse){
-            this.getHouses();
-        }
-      },
+    openHouse: function(newOpenHouse, oldOpenHouse) {
+      if (newOpenHouse) {
+        this.getHouses();
+      }
+    },
     "$store.state.player.music": function(newValue, oldValue) {
       let _this = this;
       this.albumRotate = false;
@@ -1271,7 +1261,7 @@ export default {
       });
       setTimeout(function() {
         _this.albumRotate = true;
-       if (newValue.pushTime) {
+        if (newValue.pushTime) {
           document.querySelector("#music").currentTime =
             (Date.now() - newValue.pushTime) / 1000;
         }

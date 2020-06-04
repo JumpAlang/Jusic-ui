@@ -8,7 +8,10 @@ import theme from 'muse-ui/lib/theme';
 import * as colors from 'muse-ui/lib/theme/colors';
 import Toast from 'muse-ui-toast';
 import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
+import 'muse-ui-message/dist/muse-ui-message.css';
+
 import Loading from 'muse-ui-loading';
+import Message from 'muse-ui-message';
 
 
 // import 'typeface-roboto'
@@ -27,6 +30,7 @@ theme.add('custom-theme', {
 theme.use('custom-theme');
 Vue.use(MuseUI);
 Vue.use(Loading);
+Vue.use(Message);
 
 Vue.use(Toast, {
   position: 'top',               // 弹出的位置
