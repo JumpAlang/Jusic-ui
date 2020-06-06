@@ -8,9 +8,9 @@
     "build": "vue-cli-service build --mode production"
   },
   "dependencies": {
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "@babel/polyfill": "^7.10.1",
     "classlist-polyfill": "^1.2.0",
-    "core-js": "^3.4.3",
+    "core-js": "^3.6.5",
     "muse-ui-loading": "^0.2.0",
     "muse-ui-message": "^0.2.1",
     "muse-ui-toast": "^0.3.0",
@@ -22,6 +22,8 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "muse-ui": "^3.0.2",
     "muse-ui-progress": "^0.1.0",
     "node-sass": "^4.12.0",

@@ -1,3 +1,4 @@
+import "core-js";
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -12,7 +13,6 @@ import 'muse-ui-message/dist/muse-ui-message.css';
 
 import Loading from 'muse-ui-loading';
 import Message from 'muse-ui-message';
-
 
 // import 'typeface-roboto'
 // import './scrollbar'
