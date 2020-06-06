@@ -303,6 +303,7 @@
     </div>
     <div id="play" v-if="!isPlay" style="position: fixed; width: 100%; height:100%">
       <mu-button color="success" style="float:right" @click="play">多房间版本V1.0</mu-button>
+      <mu-button color="success" style="float:right" @click="linkDownload('http://www.alang.run/release')">安卓APP</mu-button>
       <mu-icon
         @click="play"
         value="play_circle_filled"
@@ -1242,6 +1243,11 @@ export default {
       console.log(this.music.pushTime);
       document.querySelector("#music").currentTime =
         (Date.now() - this.music.pushTime) / 1000;
+    },
+    linkDownload (url) {
+
+      window.open(url,'_blank') // 新窗口打开外链接
+
     }
   },
   watch: {
