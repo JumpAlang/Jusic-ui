@@ -182,19 +182,24 @@
                   color="primary"
                   style="width: 100%"
                 >发送消息</mu-button>
+                  <div style="padding-top: 10px;">
+               
+                  <mu-chip style="margin-right:10px;"
+                    color="rgba(0, 150, 136, 0.5)"
+                    @click="openPictureSearch = !openPictureSearch"
+                  >图片</mu-chip>
+                  <mu-chip style="margin-right:10px;"  color="rgba(0, 150, 136, 0.5)" @click="musicSkipVote">切歌</mu-chip>
+                  <mu-chip style="margin-right:10px;" color="rgba(0, 150, 136, 0.5)" @click="openSearch = !openSearch">歌曲</mu-chip>
+                  <mu-chip style="margin-right:10px;"  color="rgba(0, 150, 136, 0.5)" @click="openSearchGd = !openSearchGd">歌单</mu-chip>
+             
+             </div>
               </div>
+            
             </mu-col>
             <mu-col style="margin-bottom: 160px; ">
               <div style="padding: 10px 0">
                 <mu-divider></mu-divider>
-                <div style="padding: 10px 0">
-                  <mu-chip
-                    color="rgba(0, 150, 136, 0.5)"
-                    @click="openPictureSearch = !openPictureSearch"
-                  >搜索图片</mu-chip>
-                  <mu-chip color="rgba(0, 150, 136, 0.5)" @click="musicSkipVote">投票切歌</mu-chip>
-                  <mu-chip color="rgba(0, 150, 136, 0.5)" @click="openSearch = !openSearch">搜索音乐</mu-chip>
-                </div>
+               
                 <p>交流QQ群:1029454474,欢迎过来唠嗑。</p>
                 <p>
                   提示：输入 “
@@ -211,7 +216,7 @@
                   <span
                     @click="openSearch = !openSearch"
                     style="cursor: pointer; color: #009688;"
-                  >[搜索音乐]</span>” 吧
+                  >[歌曲]</span>” 吧
                 </p>
                 <br />
                 <p>
@@ -222,7 +227,7 @@
                 <p>
                   如遇不好听的歌可以输入 “
                   <span style="color: #009688;">投票切歌</span>” 或者点击 “
-                  <span @click="musicSkipVote" style="cursor: pointer; color: #009688;">[投票切歌]</span>”，当投票人数大于在线人数 30% 时将会切歌。
+                  <span @click="musicSkipVote" style="cursor: pointer; color: #009688;">[切歌]</span>”，当投票人数大于在线人数 30% 时将会切歌。
                 </p>
                 <br />
                 <p>
@@ -235,7 +240,7 @@
                   <span
                     @click="openPictureSearch = !openPictureSearch"
                     style="cursor: pointer; color: #009688;"
-                  >[搜索图片]</span>”
+                  >[图片]</span>”
                 </p>
                 <br />
                 <p>
@@ -408,6 +413,101 @@
         </mu-row>
       </mu-container>
     </mu-dialog>
+     <mu-dialog id="searchGd" width="auto" :open.sync="openSearchGd">
+      <mu-container>
+        <mu-row>
+          <mu-col span="11">
+            <mu-text-field
+              :value="searchKeywordGd"
+              @input="updateSearchKeywordGd"
+              @keydown.enter="searchGd"
+              placeholder="请输入关键字搜索..."
+              color="#009688"
+              class="width-size-100"
+              style="text-align: center"
+            ></mu-text-field>
+                <mu-radio
+              :value="'wy'"
+              v-model="sourceGd"
+              color="primary"
+              :label="'网易'"
+              class="searchradio2"
+            ></mu-radio>
+              <mu-radio
+              :value="'wy_user'"
+              v-model="sourceGd"
+              color="primary"
+              :label="'用户'"
+              class="searchradio2"
+            ></mu-radio>
+            <mu-radio
+              :value="'qq'"
+              v-model="sourceGd"
+              color="primary"
+              :label="'QQ'"
+              class="searchradio"
+            ></mu-radio>
+            <mu-radio
+              :value="'qq_user'"
+              v-model="sourceGd"
+              color="primary"
+              :label="'用户'"
+              class="searchradio"
+            ></mu-radio>
+          </mu-col>
+          <mu-col span="1">
+            <mu-button class="search_btn" icon @click="searchGd">
+              <mu-icon value="search"></mu-icon>
+            </mu-button>
+          </mu-col>
+        </mu-row>
+        <mu-row>
+          <mu-data-table
+            style="background-color: transparent"
+            :selectable="false"
+            :hover="false"
+            :columns="searchColumnsGd"
+            :data="searchDataGd"
+          >
+            <template slot-scope="scope2">
+              <!--<td class="is-center">-->
+              <!--<a v-if="showPickButton(scope.row.privilege)" class="search_pick_btn" @click="pickMusic(scope.row)">点歌</a>-->
+              <!--<mu-tooltip v-if="!showPickButton(scope.row.privilege)" content="当前音乐不能点播">-->
+              <!--<a v-if="" class="search_pick_btn_disable">点歌</a>-->
+              <!--</mu-tooltip>-->
+              <!--</td>-->
+              <td class="is-left">
+                {{ scope2.$index + 1 }}.
+                <a  @click="songlistDetail(scope2.row)">
+                  <mu-avatar size="20" slot="avatar">
+                    <img src="../assets/images/play.png" />
+                  </mu-avatar>
+                </a>
+                {{ scope2.row.name }}
+              </td>
+              <td class="is-center">{{ scope2.row.playCount }}</td>
+
+              <td class="is-center">{{ scope2.row.creator }}</td>
+              <td class="is-center">{{ scope2.row.creatorUid }}</td>
+              <td class="is-center">{{ scope2.row.id }}</td>
+               <td class="is-center">{{ scope2.row.songCount }}</td>
+
+            </template>
+          </mu-data-table>
+        </mu-row>
+        <mu-row>
+          <mu-flex justify-content="center">
+            <mu-pagination
+              :total="searchCountGd"
+              :current.sync="currentGd"
+              :page-count="pageCount"
+              :page-size="limit"
+              @change="paginationChangeGd"
+            ></mu-pagination>
+          </mu-flex>
+        </mu-row>
+      </mu-container>
+    </mu-dialog>
     <mu-dialog id="search-picture" width="auto" :open.sync="openPictureSearch">
       <chat-search-picture></chat-search-picture>
     </mu-dialog>
@@ -416,8 +516,7 @@
       width="100%"
       transition="slide-bottom"
       fullscreen
-      :open.sync="openHouse"
-    >
+      :open.sync="openHouse">
       <mu-appbar color="primary" title="房间">
         <mu-button slot="right" flat @click="closeHouse">X</mu-button>
       </mu-appbar>
@@ -489,8 +588,11 @@ export default {
       isAdmin: "isSocketAdmin",
       good: "isSocketGood",
       searchKeyword: "getSearchKeyword",
+      searchKeywordGd: "getSearchKeywordGd",
       searchData: "getSearchData",
+      searchDataGd: "getSearchDataGd",
       searchCount: "getSearchCount",
+      searchCountGd: "getSearchCountGd",
       music2: "getMusic2"
     }),
     ...mapMutations({
@@ -520,6 +622,7 @@ export default {
     albumRotateSize: 300,
     albumRotateStyle: "",
     openSearch: false,
+    openSearchGd: false,
     openHouse: false,
     searchColumns: [
       { title: "ID", name: "id", width: 40, align: "left" },
@@ -529,12 +632,23 @@ export default {
       { title: "专辑", name: "album", align: "center" },
       { title: "时长", name: "duration", align: "center" }
     ],
+     searchColumnsGd: [
+      // {title: '操作', name: 'op', align: 'center'},
+      { title: "歌单", name: "name", width: 200, align: "left" },
+      { title: "播放量", name: "playCount", align: "center" },
+      { title: "创建者", name: "creator", align: "center" },
+      { title: "创建者id", name: "creatorUid", align: "center" },
+      { title: "歌单id", name: "id", align: "center" },
+      { title: "曲数", name: "songCount", align: "center" }
+    ],
     keyword: "",
     current: 1,
+    currentGd: 1,
     limit: 10,
     pageCount: 7,
     openPictureSearch: false,
     source: "wy",
+    sourceGd: "wy",
     sourceChat: "wy",
     house: { name: "", desc: "", password: "", needPwd: false },
     secondUrl: "",
@@ -1050,6 +1164,10 @@ export default {
             this.$store.commit("setSearchCount", messageContent.data.totalSize);
             this.$store.commit("setSearchData", messageContent.data.data);
             break;
+          case messageUtils.messageType.SEARCH_SONGLIST:
+            this.$store.commit("setSearchCountGd", messageContent.data.totalSize);
+            this.$store.commit("setSearchDataGd", messageContent.data.data);
+            break;
           case messageUtils.messageType.SEARCH_HOUSE:
             this.houses = messageContent.data;
             break;
@@ -1074,6 +1192,9 @@ export default {
     },
     updateSearchKeyword: function(value) {
       this.$store.commit("setSearchKeyword", value);
+    },
+    updateSearchKeywordGd: function(value) {
+      this.$store.commit("setSearchKeywordGd", value);
     },
     settingName: function(name) {
       let stompClient = this.$store.getters.getStompClient;
@@ -1100,9 +1221,27 @@ export default {
         })
       );
     },
+    searchGd: function() {
+      let stompClient = this.$store.getters.getStompClient;
+      stompClient.send(
+        "/music/searchsonglist",
+        {},
+        JSON.stringify({
+          name: this.$store.getters.getSearchKeywordGd.trim(),
+          sendTime: Date.now(),
+          source: this.sourceGd,
+          pageIndex: this.currentGd,
+          pageSize: this.limit
+        })
+      );
+    },
     paginationChange: function(page) {
       this.current = page;
       this.search();
+    },
+     paginationChangeGd: function(page) {
+      this.currentGd = page;
+      this.searchGd();
     },
     goodMusic: function(row) {
       let stompClient = this.$store.getters.getStompClient;
@@ -1132,6 +1271,14 @@ export default {
         return false;
       }
       return true;
+    },
+     songlistDetail(value) {
+       this.openSearchGd = false;
+       this.openSearch = true;
+       this.$store.commit("setSearchKeyword",  "*"+value.id);
+       this.source = this.sourceGd.startsWith("wy")?"wy":"qq";
+       this.current = 1;
+       this.search();
     },
     musicSkipVote: function() {
       let stompClient = this.$store.getters.getStompClient;
@@ -1310,6 +1457,7 @@ export default {
         this.albumRotateStyle =
           "border:40px solid rgb(12, 12, 12); padding: 4px;";
       }
+      // console.log(this.pageCount+"dd");
     }
   },
   mounted() {
