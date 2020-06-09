@@ -216,7 +216,11 @@
                   <span
                     @click="openSearch = !openSearch"
                     style="cursor: pointer; color: #009688;"
-                  >[歌曲]</span>” 吧
+                  >[歌曲]</span>“，如果知道歌单id，还可以在歌曲窗口直接加*搜索： <span style="color: #009688;">*歌单id</span><br/>不知道歌单id?或许歌单搜索你用得到：
+                  <span
+                    @click="openSearchGd = !openSearchGd"
+                    style="cursor: pointer; color: #009688;"
+                  >[歌单]</span>提示：歌单页面可以搜索网易歌单、网易用户id的歌单、qq歌单、qq用户id的歌单
                 </p>
                 <br />
                 <p>
@@ -301,6 +305,7 @@
           controls
           autoplay="autoplay"
           @canplaythrough="nextSong"
+          @canplay="setCurrentTime"
           style="display: none"
         ></audio>
         <audio id="music2" :src="music2.url" style="display: none"></audio>
@@ -317,10 +322,16 @@
         style="position: fixed; top: calc(50% - 75px); left: calc(50% - 75px); cursor: pointer;"
       ></mu-icon>
     </div>
-    <mu-dialog id="search" width="auto" :open.sync="openSearch">
-      <mu-container>
+    <mu-dialog id="search" width="100%"
+      transition="slide-bottom"
+      fullscreen  :open.sync="openSearch">
+      <mu-appbar color="primary" title="歌曲搜索">
+        <mu-button slot="right" flat @click="openGd">歌单</mu-button>
+        <mu-button slot="right" flat @click="closeGq">X</mu-button>
+      </mu-appbar>
+      <mu-container style="width:100%;">
         <mu-row>
-          <mu-col span="11">
+          <mu-col>
             <mu-text-field
               :value="searchKeyword"
               @input="updateSearchKeyword"
@@ -413,15 +424,21 @@
         </mu-row>
       </mu-container>
     </mu-dialog>
-     <mu-dialog id="searchGd" width="auto" :open.sync="openSearchGd">
-      <mu-container>
+     <mu-dialog id="searchGd"  width="100%"
+      transition="slide-bottom"
+      fullscreen :open.sync="openSearchGd">
+       <mu-appbar color="primary" title="歌单搜索">
+        <mu-button slot="right" flat @click="openGq">歌曲</mu-button>
+        <mu-button slot="right" flat @click="closeGd">X</mu-button>
+      </mu-appbar>
+      <mu-container style="width:100%;">
         <mu-row>
-          <mu-col span="11">
+          <mu-col >
             <mu-text-field
               :value="searchKeywordGd"
               @input="updateSearchKeywordGd"
               @keydown.enter="searchGd"
-              placeholder="请输入关键字搜索..."
+              placeholder="试下为空搜索下(*^__^*)"
               color="#009688"
               class="width-size-100"
               style="text-align: center"
@@ -479,9 +496,7 @@
               <td class="is-left">
                 {{ scope2.$index + 1 }}.
                 <a  @click="songlistDetail(scope2.row)">
-                  <mu-avatar size="20" slot="avatar">
-                    <img src="../assets/images/play.png" />
-                  </mu-avatar>
+                <mu-icon :value="'reply'"></mu-icon>
                 </a>
                 {{ scope2.row.name }}
               </td>
@@ -657,7 +672,8 @@ export default {
     musichouse: "一起听歌吧",
     loading: {},
     houseForward: "",
-    visibility: false
+    visibility: false,
+     playingId:""
   }),
   methods: {
     play: function() {
@@ -681,7 +697,7 @@ export default {
         frame => {
           // console.log('连接到服务器成功！', frame);
           this.$store.commit("setSocketIsConnected", true);
-
+          this.playingId = Math.random()*1000+"random";
           // pre onmessage
           let afterOnMessage = socketClient.onmessage;
           socketClient.onmessage = function(message) {
@@ -730,7 +746,6 @@ export default {
       let stompClient = this.$store.getters.getStompClient;
 
       stompClient.subscribe("/topic/chat", response => {
-        console.log("来自 /topic/chat 频道的消息", response);
         let body = JSON.parse(response.body);
         if (body.code == "20000") {
           this.$toast.message(body.data);
@@ -1324,10 +1339,23 @@ export default {
       //document.querySelector('#music2').src = this.secondUrl;
 
       //console.log(this.secondUrl);
-      //console.log("第二首");
     },
     closeHouse() {
       this.openHouse = false;
+    },
+     closeGd() {
+      this.openSearchGd = false;
+    },
+    openGd(){
+      this.openSearch = false;
+      this.openSearchGd = true;
+    },
+     openGq(){
+      this.openSearchGd = false;
+      this.openSearch = true;
+    },
+     closeGq() {
+      this.openSearch = false;
     },
     createHouse() {
       this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
@@ -1360,14 +1388,12 @@ export default {
           }
         });
       } else {
-        console.log(name);
         this.houseEnter(id, name, "");
       }
     },
     houseEnter(id, name, pwd) {
       this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
 
-      console.log(name);
       this.houseForward = name;
       let stompClient = this.$store.getters.getStompClient;
       stompClient.send(
@@ -1387,9 +1413,8 @@ export default {
       document.getElementById("chat-container").innerHTML = "";
     },
     setCurrentTime() {
-      console.log(this.music.pushTime);
-      document.querySelector("#music").currentTime =
-        (Date.now() - this.music.pushTime) / 1000;
+      this.playingId= this.$store.getters.getPlayerMusic.id + this.$store.getters.getPlayerMusic.source;
+    
     },
     linkDownload (url) {
 
@@ -1398,13 +1423,9 @@ export default {
     }
   },
   watch: {
-    openHouse: function(newOpenHouse, oldOpenHouse) {
-      if (newOpenHouse) {
-        this.getHouses();
-      }
-    },
-    "$store.state.player.music": function(newValue, oldValue) {
-      let _this = this;
+    playingId:function(newValue,oldValue){
+      if(newValue != oldValue){
+          let _this = this;
       this.albumRotate = false;
       document.querySelector("#music").volume =
         Number(this.$store.getters.getPlayerVolume) / 100;
@@ -1414,12 +1435,22 @@ export default {
       });
       setTimeout(function() {
         _this.albumRotate = true;
-        if (newValue.pushTime) {
+        let pushTime = _this.$store.getters.getPlayerMusic.pushTime;
+        if (pushTime) {
           document.querySelector("#music").currentTime =
-            (Date.now() - newValue.pushTime) / 1000;
+            (Date.now() - pushTime) / 1000;
         }
       }, 1000);
+      }
     },
+    openHouse: function(newOpenHouse, oldOpenHouse) {
+      if (newOpenHouse) {
+        this.getHouses();
+      }
+    },
+    // "$store.state.player.music": function(newValue, oldValue) {
+    
+    // },
     "$store.state.chat.data": function(newValue, oldValue) {
       setTimeout(function() {
         let chat = document.querySelector("#chat-container");
@@ -1439,23 +1470,27 @@ export default {
       if (val <= 400) {
         this.albumRotateStyle =
           "border:60px solid rgb(12, 12, 12); padding: 8px;";
-        this.pageCount = 1;
+        this.pageCount = 3;
       }
       if (val > 400 && val <= 766) {
         this.albumRotateSize = 450;
         this.albumRotateStyle =
           "border:70px solid rgb(12, 12, 12); padding: 8px;";
-        this.pageCount = 3;
+        this.pageCount = 5;
       }
       if (val > 766 && val < 1000) {
         this.albumRotateSize = 160;
         this.albumRotateStyle =
           "border:32px solid rgb(12, 12, 12); padding: 4px;";
+        this.pageCount = 9;
+
       }
       if (val >= 1000) {
         this.albumRotateSize = 200;
         this.albumRotateStyle =
           "border:40px solid rgb(12, 12, 12); padding: 4px;";
+          this.pageCount = 11;
+
       }
       // console.log(this.pageCount+"dd");
     }
@@ -1469,25 +1504,31 @@ export default {
     // console.log(val);
 
     if (val <= 400) {
-      this.pageCount = 1;
+      this.pageCount =3;
     }
     if (val > 400 && val <= 700) {
       this.albumRotateSize = val - 60;
       this.albumRotateStyle = `border:${Math.floor(val / 10) +
         10}px solid rgb(12, 12, 12);`;
-      this.pageCount = 3;
+      this.pageCount = 5;
     }
     if (val > 700 && val <= 766) {
       this.albumRotateSize = 450;
       this.albumRotateStyle = "border:70px solid rgb(12, 12, 12);";
+            this.pageCount = 7;
+
     }
     if (val > 766 && val < 1000) {
       this.albumRotateSize = 160;
       this.albumRotateStyle = "border:32px solid rgb(12, 12, 12);";
+            this.pageCount = 9;
+
     }
     if (val >= 1000) {
       this.albumRotateSize = 200;
       this.albumRotateStyle = "border:40px solid rgb(12, 12, 12);";
+            this.pageCount = 11;
+
     }
   }
 };
