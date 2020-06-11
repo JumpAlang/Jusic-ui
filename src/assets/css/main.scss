@@ -204,8 +204,27 @@ body, table, tr, td, th {
   max-width: 100%;
   max-height:100%;
 }
-
+#searchUser   .mu-dialog-body {
+  max-width: 100%;
+  max-height:100%;
+}
 #search   .mu-dialog-body {
   max-width: 100%;
   max-height:100%;
+}
+
+.mu-switch-label{
+  color:gray !important;;
+}
+.mu-switch{
+  margin : 0 10px !important;
+}
+
+
+.mu-dialog-title{
+  font-size:16px !important;
+}
+
+.mu-appbar-title {
+  padding-left:8px !important;
 }

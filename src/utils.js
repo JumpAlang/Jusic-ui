@@ -61,7 +61,8 @@ export let messageUtils = {
         SEARCH_HOUSE:'SEARCH_HOUSE',
         ENTER_HOUSE:"ENTER_HOUSE",
         ADD_HOUSE:"ADD_HOUSE",
-        SEARCH_SONGLIST:"SEARCH_SONGLIST"
+        SEARCH_SONGLIST:"SEARCH_SONGLIST",
+        SEARCH_USER:"SEARCH_USER"
     },
     isKnowMessageType: {},
     parseMessageType: {},

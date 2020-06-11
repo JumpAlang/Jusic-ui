@@ -44,6 +44,11 @@ export default new Vuex.Store({
             keyword: '',
             count: 0,
             data: []
+        },
+        searchUser: {
+            keyword: '',
+            count: 0,
+            data: []
         }
     },
     getters: {
@@ -119,17 +124,26 @@ export default new Vuex.Store({
         getSearchKeywordGd: state => {
             return state.searchGd.keyword
         },
+        getSearchKeywordUser: state => {
+            return state.searchUser.keyword
+        },
         getSearchData: state => {
             return state.search.data
         },
         getSearchDataGd: state => {
             return state.searchGd.data
         },
+        getSearchDataUser: state => {
+            return state.searchUser.data
+        },
         getSearchCount: state => {
             return state.search.count
         },
         getSearchCountGd: state => {
             return state.searchGd.count
+        },
+        getSearchCountUser: state => {
+            return state.searchUser.count
         },
         getSearchPictureKeyword: state => {
             return state.search.picture.keyword
@@ -207,17 +221,26 @@ export default new Vuex.Store({
         setSearchKeywordGd: (state, value) => {
             state.searchGd.keyword = value
         },
+        setSearchKeywordUser: (state, value) => {
+            state.searchUser.keyword = value
+        },
         setSearchData: (state, value) => {
             state.search.data = value
         },
         setSearchDataGd: (state, value) => {
             state.searchGd.data = value
         },
+        setSearchDataUser: (state, value) => {
+            state.searchUser.data = value
+        },
         setSearchCount: (state, value) => {
             state.search.count = value
         },
         setSearchCountGd: (state, value) => {
             state.searchGd.count = value
+        },
+        setSearchCountUser: (state, value) => {
+            state.searchUser.count = value
         },
         setSearchPictureKeyword: (state, value) => {
             state.search.picture.keyword = value
