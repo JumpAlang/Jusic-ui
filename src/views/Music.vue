@@ -340,20 +340,21 @@
 
       <mu-flex class="flex-wrapper" justify-content="center" style="padding-top:30px;">
        <mu-form :model="homeHouse" class="mu-demo-form" align="center" >
-        <mu-text-field v-model="homeHouse.name" placeholder="房间名称"></mu-text-field>
-        <mu-text-field v-model="homeHouse.desc" placeholder="房间描述"></mu-text-field>
-        <mu-text-field
+         <div align="center">
+            <mu-text-field v-model="homeHouse.name" placeholder="房间名称"></mu-text-field>
+          <mu-text-field v-model="homeHouse.desc" placeholder="房间描述"></mu-text-field>
+          <mu-text-field
           v-if="homeHouse.needPwd"
           placeholder="房间密码"
           v-model="homeHouse.password"
           :action-icon="visibility ? 'visibility_off' : 'visibility'"
           :action-click="() => (visibility = !visibility)"
           :type="visibility ? 'text' : 'password'"
-        ></mu-text-field>
-
+          ></mu-text-field>
+         </div>
         <mu-flex class="flex-wrapper" align-items="center">
-         <mu-flex class="flex-demo" justify-content="end" fill><mu-button color="primary" @click="createHomeHouse">创建房间</mu-button></mu-flex>
-        <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="homeHouse.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
+          <mu-flex class="flex-demo" justify-content="end" fill><mu-button color="primary" @click="createHomeHouse">创建房间</mu-button></mu-flex>
+          <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="homeHouse.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
         </mu-flex>
       </mu-form>
       </mu-flex>
@@ -667,12 +668,14 @@
       </mu-appbar>
         <mu-flex class="flex-wrapper" justify-content="center">
             <mu-form :model="house" class="mu-demo-form" align="center">
+             <div align="center">
               <mu-text-field v-model="house.name" placeholder="房间名称"></mu-text-field>
               <mu-text-field v-model="house.desc" placeholder="房间描述"></mu-text-field>
               <mu-text-field v-if="house.needPwd" placeholder="房间密码" v-model="house.password" :action-icon="visibility ? 'visibility_off' : 'visibility'"
                 :action-click="() => (visibility = !visibility)"
                 :type="visibility ? 'text' : 'password'"
               ></mu-text-field>
+              </div>
 
               <mu-flex class="flex-wrapper" align-items="center">
                 <mu-flex class="flex-demo" justify-content="end" fill><mu-button color="primary" @click="createHouse">创建房间</mu-button></mu-flex>
