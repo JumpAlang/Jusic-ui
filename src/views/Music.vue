@@ -86,6 +86,7 @@
                   <td class="is-center">{{ scope.row.artist }}</td>
                   <td class="is-center">{{ "《" + scope.row.album.name + "》" }}</td>
                   <!--                                    <td class="is-center">{{scope.row.nickName + scope.row.sessionId?`[${scope.row.sessionId}]`: '[]'}}</td>-->
+
                   <td class="is-center">
                     {{
                     isRoot || isAdmin
@@ -251,35 +252,41 @@
                   <span style="color: orange;">管理员功能</span>
                 </p>
                 <p>
-                  ：登录： “
-                  <span style="color: #009688;">admin 123456</span>” 。
-                  修改密码： “
-                  <span style="color: #009688;">修改密码 123456</span>” 。
-                  点赞模式（歌曲列表按点赞数排序）： “
+                  1.登录： “
+                  <span style="color: #009688;">admin 123456</span>” 。<br/><br/>
+                  2.修改密码： “
+                  <span style="color: #009688;">修改密码 123456</span>” 。<br/><br/>
+                  3.点赞模式（歌曲列表按点赞数排序）： “
                   <span style="color: #009688;">点赞模式</span>” 退出则“
-                  <span style="color: #009688;">退出点赞模式</span>” 。
-                  修改投票切歌率： “
-                  <span style="color: #009688;">投票切歌率 1</span>” 数值在(0,1]。
-                  禁止切歌：“
+                  <span style="color: #009688;">退出点赞模式</span>” 。<br/><br/>
+                  4.修改投票切歌率： “
+                  <span style="color: #009688;">投票切歌率 1</span>” 数值在(0,1]。<br/><br/>
+                  5.禁止切歌：“
                   <span style="color: #009688;">禁止切歌</span>” 启用则“
-                  <span style="color: #009688;">启用切歌</span>” 。
-                  禁止点歌：“
+                  <span style="color: #009688;">启用切歌</span>” 。<br/><br/>
+                  6.禁止点歌：“
                   <span style="color: #009688;">禁止点歌</span>” 启用则“
-                  <span style="color: #009688;">启用点歌</span>” 。
-                  清空列表：“
-                  <span style="color: #009688;">清空列表</span>” 。
-                  置顶音乐： “
-                  <span style="color: #009688;">置顶音乐 音乐id</span>” 音乐id即歌曲列表中歌曲后面那一串字母，如411214279。
-                  拉黑音乐：“
+                  <span style="color: #009688;">启用点歌</span>” 。<br/><br/>
+                  7.清空列表：“
+                  <span style="color: #009688;">清空列表</span>” 。<br/><br/>
+                  8.清空默认播放列表：“
+                  <span style="color: #009688;">清空默认列表</span>” 。<br/><br/>
+                  9.设置默认播放列表：“
+                  <span style="color: #009688;">设置默认列表 24381616,1</span>” 。<br/><br/>
+                  10.默认列表歌曲数：“
+                  <span style="color: #009688;">默认列表歌曲数</span>” 。<br/><br/>
+                  11.置顶音乐： “
+                  <span style="color: #009688;">置顶音乐 音乐id</span>” 音乐id即歌曲列表中歌曲后面那一串字母，如411214279。<br/><br/>
+                  12.拉黑音乐：“
                   <span style="color: #009688;">拉黑音乐 音乐id</span>” 漂白则“
-                  <span style="color: #009688;">漂白音乐 音乐id</span>” 。
-                  音乐黑名单： “
-                  <span style="color: #009688;">音乐黑名单</span>” 。
-                  拉黑用户：“
+                  <span style="color: #009688;">漂白音乐 音乐id</span>” 。<br/><br/>
+                  13.音乐黑名单： “
+                  <span style="color: #009688;">音乐黑名单</span>” 。<br/><br/>
+                  14.拉黑用户：“
                   <span style="color: #009688;">拉黑用户 用户id</span>” 漂白则“
-                  <span style="color: #009688;">漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。
-                  用户黑名单： “
-                  <span style="color: #009688;">用户黑名单</span>” 。
+                  <span style="color: #009688;">漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。<br/><br/>
+                  15.用户黑名单： “
+                  <span style="color: #009688;">用户黑名单</span>” 。<br/><br/>
                 </p>
                 <br />
                 <p>
@@ -311,16 +318,46 @@
         <audio id="music2" :src="music2.url" style="display: none"></audio>
       </div>
     </div>
-    <div id="play" v-if="!isPlay" style="position: fixed; width: 100%; height:100%">
-      <mu-button color="success" style="float:right" @click="play">多房间版本V1.0</mu-button>
-      <mu-button color="success" style="float:right" @click="linkDownload('http://www.alang.run/release')">安卓APP</mu-button>
-      <mu-icon
-        @click="play"
-        value="play_circle_filled"
-        color="primary"
-        size="150"
-        style="position: fixed; top: calc(50% - 75px); left: calc(50% - 75px); cursor: pointer;"
-      ></mu-icon>
+    <div id="play" v-if="!isPlay" :style="backgroundDiv">
+    <mu-flex class="flex-wrapper" justify-content="end">
+      <mu-button color="info" flat @click="linkDownload('http://www.alang.run/release')">
+       <mu-icon left value="android"></mu-icon>
+          APP</mu-button>
+    </mu-flex>
+    <mu-flex class="flex-wrapper" justify-content="center" style="margin-top:10px;" wrap="wrap">
+      <mu-flex  v-for="house, index in homeHouses" :key="house.id" @click="enterHomeHouse(house.id,house.name,house.needPwd)">
+          <mu-tooltip  :content="house.desc">
+            <mu-chip class="demo-chip" color="teal" style="margin:5px 3px;">
+              <mu-avatar :size="32" color="blue300">
+                <mu-icon :value="house.needPwd?'lock':'lock_open'"></mu-icon>
+              </mu-avatar>
+              {{house.name}}
+            </mu-chip>
+          </mu-tooltip>
+      </mu-flex>
+        
+    </mu-flex>
+
+      <mu-flex class="flex-wrapper" justify-content="center" style="padding-top:30px;">
+       <mu-form :model="homeHouse" class="mu-demo-form" align="center" >
+        <mu-text-field v-model="homeHouse.name" placeholder="房间名称"></mu-text-field>
+        <mu-text-field v-model="homeHouse.desc" placeholder="房间描述"></mu-text-field>
+        <mu-text-field
+          v-if="homeHouse.needPwd"
+          placeholder="房间密码"
+          v-model="homeHouse.password"
+          :action-icon="visibility ? 'visibility_off' : 'visibility'"
+          :action-click="() => (visibility = !visibility)"
+          :type="visibility ? 'text' : 'password'"
+        ></mu-text-field>
+
+        <mu-flex class="flex-wrapper" align-items="center">
+         <mu-flex class="flex-demo" justify-content="end" fill><mu-button color="primary" @click="createHomeHouse">创建房间</mu-button></mu-flex>
+        <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="homeHouse.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
+        </mu-flex>
+      </mu-form>
+      </mu-flex>
+      
     </div>
     <mu-dialog id="search" width="100%"
       transition="slide-bottom"
@@ -336,7 +373,7 @@
               :value="searchKeyword"
               @input="updateSearchKeyword"
               @keydown.enter="search"
-              placeholder="请输入关键字搜索..."
+              :placeholder="placeHolderGq"
               color="#009688"
               class="width-size-100"
               style="text-align: center"
@@ -406,6 +443,11 @@
                 {{ scope.row.name }}
               </td>
               <td class="is-center">{{ scope.row.artist }}</td>
+           <!--    <td  class="is-center">
+                 <mu-card-media width="50px" heigth="50px">
+                    <img :src="scope.row.picture_url">
+                </mu-card-media>
+              </td>-->
               <td class="is-center">{{ "《" + scope.row.album.name + "》" }}</td>
               <td class="is-center">{{ formatterTime(scope.row.duration / 1000) }}</td>
             </template>
@@ -428,6 +470,7 @@
       transition="slide-bottom"
       fullscreen :open.sync="openSearchGd">
        <mu-appbar color="primary" title="歌单搜索">
+        <mu-button slot="right" flat @click="openUser">用户</mu-button>
         <mu-button slot="right" flat @click="openGq">歌曲</mu-button>
         <mu-button slot="right" flat @click="closeGd">X</mu-button>
       </mu-appbar>
@@ -438,7 +481,7 @@
               :value="searchKeywordGd"
               @input="updateSearchKeywordGd"
               @keydown.enter="searchGd"
-              placeholder="试下为空搜索下(*^__^*)"
+              :placeholder="placeHolderGd"
               color="#009688"
               class="width-size-100"
               style="text-align: center"
@@ -500,13 +543,18 @@
                 </a>
                 {{ scope2.row.name }}
               </td>
-              <td class="is-center">{{ scope2.row.playCount }}</td>
+              <td>
+                <mu-card-media width="50px" heigth="50px">
+                    <img :src="scope2.row.pictureUrl">
+                </mu-card-media>
+              </td>
+              <td class="is-center">{{ scope2.row.desc|ellipsis }}</td>
 
               <td class="is-center">{{ scope2.row.creator }}</td>
               <td class="is-center">{{ scope2.row.creatorUid }}</td>
               <td class="is-center">{{ scope2.row.id }}</td>
+               <td class="is-center">{{ scope2.row.playCount }}</td>
                <td class="is-center">{{ scope2.row.songCount }}</td>
-
             </template>
           </mu-data-table>
         </mu-row>
@@ -518,6 +566,88 @@
               :page-count="pageCount"
               :page-size="limit"
               @change="paginationChangeGd"
+            ></mu-pagination>
+          </mu-flex>
+        </mu-row>
+      </mu-container>
+    </mu-dialog>
+    <mu-dialog id="searchUser"  width="100%"
+      transition="slide-bottom"
+      fullscreen :open.sync="openSearchUser">
+       <mu-appbar color="primary" title="用户搜索">
+        <mu-button slot="right" flat @click="openGdFromUser">歌单</mu-button>
+        <mu-button slot="right" flat @click="closeUser">X</mu-button>
+      </mu-appbar>
+      <mu-container style="width:100%;">
+        <mu-row>
+          <mu-col >
+            <mu-text-field
+              :value="searchKeywordUser"
+              @input="updateSearchKeywordUser"
+              @keydown.enter="searchUser"
+              placeholder="请输入用户昵称"
+              color="#009688"
+              class="width-size-100"
+              style="text-align: center"
+            ></mu-text-field>
+            <mu-radio
+              :value="'wy'"
+              v-model="sourceUser"
+              color="primary"
+              :label="'网易'"
+              class="searchradio"
+            ></mu-radio>
+          </mu-col>
+          <mu-col span="1">
+            <mu-button class="search_btn" icon @click="searchUser">
+              <mu-icon value="search"></mu-icon>
+            </mu-button>
+          </mu-col>
+        </mu-row>
+        <mu-row>
+          <mu-data-table
+            style="background-color: transparent"
+            :selectable="false"
+            :hover="false"
+            :columns="searchColumnsUser"
+            :data="searchDataUser"
+          >
+            <template slot-scope="scope3">
+              <!--<td class="is-center">-->
+              <!--<a v-if="showPickButton(scope.row.privilege)" class="search_pick_btn" @click="pickMusic(scope.row)">点歌</a>-->
+              <!--<mu-tooltip v-if="!showPickButton(scope.row.privilege)" content="当前音乐不能点播">-->
+              <!--<a v-if="" class="search_pick_btn_disable">点歌</a>-->
+              <!--</mu-tooltip>-->
+              <!--</td>-->
+              <td class="is-left">
+                {{ scope3.$index + 1 }}.
+                <a  @click="songtableDetail(scope3.row)">
+                <mu-icon :value="'reply'"></mu-icon>
+                </a>
+                {{ scope3.row.nickname }}
+              </td>
+              <td class="is-center">
+                <mu-avatar size="36">
+                <img :src="scope3.row.avatarUrl">
+              </mu-avatar>
+              </td>
+              <td class="is-center">{{ scope3.row.userId }}</td>
+
+              <td class="is-center">{{ scope3.row.signature |ellipsis }}</td>
+              <td class="is-center">{{ scope3.row.description|ellipsis}}</td>
+              <td class="is-center">{{ scope3.row.gender==1?'男':(scope3.row.gender==2?'女':'未知' )}}</td>
+
+            </template>
+          </mu-data-table>
+        </mu-row>
+        <mu-row>
+          <mu-flex justify-content="center">
+            <mu-pagination
+              :total="searchCountUser"
+              :current.sync="currentUser"
+              :page-count="pageCount"
+              :page-size="limit"
+              @change="paginationChangeUser"
             ></mu-pagination>
           </mu-flex>
         </mu-row>
@@ -535,39 +665,36 @@
       <mu-appbar color="primary" title="房间">
         <mu-button slot="right" flat @click="closeHouse">X</mu-button>
       </mu-appbar>
-      <mu-form :model="house" class="mu-demo-form" align="center">
-        <mu-text-field v-model="house.name" placeholder="房间名称"></mu-text-field>
-        <mu-text-field v-model="house.desc" placeholder="房间描述"></mu-text-field>
-        <mu-text-field
-          v-if="house.needPwd"
-          placeholder="房间密码"
-          v-model="house.password"
-          :action-icon="visibility ? 'visibility_off' : 'visibility'"
-          :action-click="() => (visibility = !visibility)"
-          :type="visibility ? 'text' : 'password'"
-        ></mu-text-field>
-        <mu-switch v-model="house.needPwd" color="primary" label="密码"></mu-switch>
+        <mu-flex class="flex-wrapper" justify-content="center">
+            <mu-form :model="house" class="mu-demo-form" align="center">
+              <mu-text-field v-model="house.name" placeholder="房间名称"></mu-text-field>
+              <mu-text-field v-model="house.desc" placeholder="房间描述"></mu-text-field>
+              <mu-text-field v-if="house.needPwd" placeholder="房间密码" v-model="house.password" :action-icon="visibility ? 'visibility_off' : 'visibility'"
+                :action-click="() => (visibility = !visibility)"
+                :type="visibility ? 'text' : 'password'"
+              ></mu-text-field>
 
-        <div align="center">
-          <mu-button color="primary" @click="createHouse">创建房间</mu-button>
-        </div>
-      </mu-form>
-      <div align="center" style="padding-top:30px;">
-        <span
-          v-for="house, index in houses"
-          :key="house.id"
-          @click="enterHouse(house.id,house.name,house.needPwd)"
-        >
-          <mu-tooltip :content="house.desc">
-            <mu-chip class="demo-chip" color="teal">
+              <mu-flex class="flex-wrapper" align-items="center">
+                <mu-flex class="flex-demo" justify-content="end" fill><mu-button color="primary" @click="createHouse">创建房间</mu-button></mu-flex>
+                <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="house.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
+              </mu-flex>
+            </mu-form>
+        </mu-flex>
+      <mu-flex class="flex-wrapper" justify-content="center" style="padding-top:30px;" wrap="wrap"	>
+        <mu-flex   v-for="houseItem, index in houses"
+          :key="houseItem.id"
+          @click="enterHouse(houseItem.id,houseItem.name,houseItem.needPwd)" >
+           <mu-tooltip :content="houseItem.desc">
+            <mu-chip class="demo-chip" color="teal" style="margin:5px 3px;">
               <mu-avatar :size="32" color="blue300">
-                <mu-icon :value="house.needPwd?'lock':'lock_open'"></mu-icon>
+                <mu-icon :value="houseItem.needPwd?'lock':'lock_open'"></mu-icon>
               </mu-avatar>
-              {{house.name}}
+              {{houseItem.name}}
             </mu-chip>
           </mu-tooltip>
-        </span>
-      </div>
+        </mu-flex>
+         
+      </mu-flex>
     </mu-dialog>
   </div>
 </template>
@@ -580,12 +707,20 @@ import { sendUtils, messageUtils, timeUtils, musicUtils } from "../utils";
 import { baseUrl, isProduction } from "../config/environment";
 import Navigation from "../components/Navigation";
 import ChatSearchPicture from "../components/ChatSearchPicture";
-
 export default {
   name: "Music",
   components: {
     Navigation,
     ChatSearchPicture
+  },
+  filters: {
+    ellipsis (value) {
+      if (!value) return ''
+      if (value.length > 20) {
+        return value.slice(0,20) + '...'
+      }
+      return value
+    }
   },
   computed: {
     ...mapGetters({
@@ -604,10 +739,13 @@ export default {
       good: "isSocketGood",
       searchKeyword: "getSearchKeyword",
       searchKeywordGd: "getSearchKeywordGd",
+      searchKeywordUser: "getSearchKeywordUser",
       searchData: "getSearchData",
       searchDataGd: "getSearchDataGd",
+      searchDataUser: "getSearchDataUser",
       searchCount: "getSearchCount",
       searchCountGd: "getSearchCountGd",
+      searchCountUser: "getSearchCountUser",
       music2: "getMusic2"
     }),
     ...mapMutations({
@@ -638,55 +776,90 @@ export default {
     albumRotateStyle: "",
     openSearch: false,
     openSearchGd: false,
+    openSearchUser: false,
     openHouse: false,
     searchColumns: [
       { title: "ID", name: "id", width: 40, align: "left" },
       // {title: '操作', name: 'op', align: 'center'},
       { title: "歌曲", name: "name", width: 200, align: "left" },
       { title: "歌手", name: "artist", align: "center" },
+    //  { title: "封面", name: "picture_url", align: "center" },
       { title: "专辑", name: "album", align: "center" },
       { title: "时长", name: "duration", align: "center" }
     ],
      searchColumnsGd: [
       // {title: '操作', name: 'op', align: 'center'},
       { title: "歌单", name: "name", width: 200, align: "left" },
-      { title: "播放量", name: "playCount", align: "center" },
+      { title: "封面", name: "pictureUrl", align: "center" },
+      { title: "描述", name: "desc", align: "center" },
       { title: "创建者", name: "creator", align: "center" },
       { title: "创建者id", name: "creatorUid", align: "center" },
       { title: "歌单id", name: "id", align: "center" },
+      { title: "播放量", name: "playCount", align: "center" },
       { title: "曲数", name: "songCount", align: "center" }
+    ],
+     searchColumnsUser: [
+      // {title: '操作', name: 'op', align: 'center'},
+      { title: "昵称", name: "nickname", width: 200, align: "left" },
+      { title: "头像", name: "avatarUrl", align: "center" },
+      { title: "用户id", name: "userId", align: "center" },
+      { title: "签名", name: "signature", align: "center" },
+      { title: "描述", name: "description", align: "center" },
+      { title: "性别", name: "gender", align: "center" }
     ],
     keyword: "",
     current: 1,
     currentGd: 1,
+    currentUser:1,
     limit: 10,
     pageCount: 7,
     openPictureSearch: false,
     source: "wy",
     sourceGd: "wy",
     sourceChat: "wy",
+    sourceUser: "wy",
     house: { name: "", desc: "", password: "", needPwd: false },
+    homeHouse: { name: "", desc: "", password: "", needPwd: false },
     secondUrl: "",
     firstLoaded: 0,
     houses: [],
+    homeHouses: [],
     musichouse: "一起听歌吧",
     loading: {},
     houseForward: "",
     visibility: false,
-     playingId:""
-  }),
+    playingId:"",
+    houseId:"",
+    housePwd:"123",
+    connectType:"",
+    placeHolderGd:'试下为空搜索下(*^__^*)',
+    placeHolderGq:'请输入关键字搜索',
+     backgroundDiv:{
+       position:"fixed",
+       top:0,
+       left: 0,
+        width:"100%",
+        height:"100%",
+        zoom: 1,
+        background:'url(' + require('../assets/images/background.jpg') + ') no-repeat',
+        "background-size":"100% 100%",
+         "background-size": "cover",
+         "-webkit-background-size": "cover",
+        "-o-background-size": "cover"
+    }
+   } ),
   methods: {
     play: function() {
       this.getScreenWidth();
       this.isPlay = !this.isPlay;
       this.connect();
     },
-    connect: function() {
+    connect: function(houseId) {
       let _this = this;
       let socketClient = this.$store.getters.getSocketClient;
       let stompClient = this.$store.getters.getStompClient;
 
-      socketClient = new SockJS(baseUrl + "/server"); // new SockJS("https://www.alang.run" + '/wss');//
+      socketClient = new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); // new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);//
       stompClient = Stomp.over(socketClient);
 
       if (isProduction) {
@@ -697,7 +870,6 @@ export default {
         frame => {
           // console.log('连接到服务器成功！', frame);
           this.$store.commit("setSocketIsConnected", true);
-          this.playingId = Math.random()*1000+"random";
           // pre onmessage
           let afterOnMessage = socketClient.onmessage;
           socketClient.onmessage = function(message) {
@@ -871,11 +1043,32 @@ export default {
             );
           }
           break;
+              case "设置默认列表":
+          content = sendUtils.parseContent(instruction, chatMessage);
+          if (content === "") {
+            // console.log('请输入要删除的音乐 id', chatMessage)
+          } else {
+            stompClient.send(
+              "/music/setDefaultPlaylist",
+              {},
+              JSON.stringify({
+                id: content,
+                source: this.sourceChat
+              })
+            );
+          }
+          break;
         case "清空列表":
           stompClient.send("/music/clear", {}, "");
           break;
+        case "清空默认列表":
+          stompClient.send("/music/clearDefaultPlayList", {}, "");
+          break;
         case "音乐黑名单":
           stompClient.send("/music/blackmusic", {}, "");
+          break;
+         case "默认列表歌曲数":
+          stompClient.send("/music/playlistSize", {}, "");
           break;
         case "用户黑名单":
           stompClient.send("/chat/blackuser", {}, "");
@@ -912,6 +1105,12 @@ export default {
           break;
         case "退出点赞模式":
           stompClient.send("/music/goodmodel/false", {}, "");
+          break;
+           case "留存房间":
+          stompClient.send("/house/retain/true", {}, "");
+          break;
+        case "不留存房间":
+          stompClient.send("/house/retain/false", {}, "");
           break;
         case "禁止点歌":
           stompClient.send("/music/banchoose/true", {}, "");
@@ -1183,6 +1382,10 @@ export default {
             this.$store.commit("setSearchCountGd", messageContent.data.totalSize);
             this.$store.commit("setSearchDataGd", messageContent.data.data);
             break;
+           case messageUtils.messageType.SEARCH_USER:
+            this.$store.commit("setSearchCountUser", messageContent.data.totalSize);
+            this.$store.commit("setSearchDataUser", messageContent.data.data);
+            break;
           case messageUtils.messageType.SEARCH_HOUSE:
             this.houses = messageContent.data;
             break;
@@ -1210,6 +1413,9 @@ export default {
     },
     updateSearchKeywordGd: function(value) {
       this.$store.commit("setSearchKeywordGd", value);
+    },
+     updateSearchKeywordUser: function(value) {
+      this.$store.commit("setSearchKeywordUser", value);
     },
     settingName: function(name) {
       let stompClient = this.$store.getters.getStompClient;
@@ -1242,10 +1448,24 @@ export default {
         "/music/searchsonglist",
         {},
         JSON.stringify({
-          name: this.$store.getters.getSearchKeywordGd.trim(),
+          name: (this.$store.getters.getSearchKeywordGd+"").trim(),
           sendTime: Date.now(),
           source: this.sourceGd,
           pageIndex: this.currentGd,
+          pageSize: this.limit
+        })
+      );
+    },
+     searchUser: function() {
+      let stompClient = this.$store.getters.getStompClient;
+      stompClient.send(
+        "/music/searchuser",
+        {},
+        JSON.stringify({
+          nickname: this.$store.getters.getSearchKeywordUser.trim(),
+          sendTime: Date.now(),
+          source: this.sourceUser,
+          pageIndex: this.currentUser,
           pageSize: this.limit
         })
       );
@@ -1257,6 +1477,10 @@ export default {
      paginationChangeGd: function(page) {
       this.currentGd = page;
       this.searchGd();
+    },
+     paginationChangeUser: function(page) {
+      this.currentUser = page;
+      this.searchUser();
     },
     goodMusic: function(row) {
       let stompClient = this.$store.getters.getStompClient;
@@ -1294,6 +1518,14 @@ export default {
        this.source = this.sourceGd.startsWith("wy")?"wy":"qq";
        this.current = 1;
        this.search();
+    },
+     songtableDetail(value) {
+       this.openSearchUser = false;
+       this.openSearchGd = true;
+       this.$store.commit("setSearchKeywordGd",  value.userId);
+       this.sourceGd = this.sourceUser+"_user";
+       this.currentGd = 1;
+       this.searchGd();
     },
     musicSkipVote: function() {
       let stompClient = this.$store.getters.getStompClient;
@@ -1346,13 +1578,24 @@ export default {
      closeGd() {
       this.openSearchGd = false;
     },
+    closeUser() {
+      this.openSearchUser = false;
+    },
     openGd(){
       this.openSearch = false;
+      this.openSearchGd = true;
+    },
+    openGdFromUser(){
+      this.openSearchUser = false;
       this.openSearchGd = true;
     },
      openGq(){
       this.openSearchGd = false;
       this.openSearch = true;
+    },
+       openUser(){
+      this.openSearchGd = false;
+      this.openSearchUser = true;
     },
      closeGq() {
       this.openSearch = false;
@@ -1370,6 +1613,31 @@ export default {
           password:this.house.password
         })
       );
+    },
+     createHomeHouse() {
+      this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
+       this.$http.post("/house/add",{  name: this.homeHouse.name,
+          desc: this.homeHouse.desc,
+          needPwd:this.homeHouse.needPwd,
+          password:this.homeHouse.password})
+        .then(response => {
+          this.loading.close();
+          if(response.data.code=="20000"){
+            this.houseId = response.data.data;
+            this.housePwd = this.homeHouse.password;
+            this.play();
+            this.musichouse = this.homeHouse.name;
+                document
+                .querySelectorAll(".mu-tooltip")
+                .forEach(el => (el.style.display = "none"));
+          }else{
+            this.$toast.message(response.data.message);
+          }
+         
+        })
+        .catch(error => {
+            this.loading.close();
+        })
     },
     enterHouse(id, name, needPwd) {
       if (needPwd) {
@@ -1391,6 +1659,26 @@ export default {
         this.houseEnter(id, name, "");
       }
     },
+     enterHomeHouse(id, name, needPwd) {
+      if (needPwd) {
+        this.$prompt("", "请输入房间密码", {
+          validator(value) {
+            return {
+              valid: value != "",
+              message: "密码不能为空"
+            };
+          }
+        }).then(({ result, value }) => {
+          if (result) {
+            this.homeHouseEnter(id, name, value);
+          } else {
+            //this.$toast.message('点击了取消');
+          }
+        });
+      } else {
+        this.homeHouseEnter(id, name, "");
+      }
+    },
     houseEnter(id, name, pwd) {
       this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
 
@@ -1405,9 +1693,47 @@ export default {
         })
       );
     },
+     homeHouseEnter(id, name, pwd) {
+      this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
+
+      this.$http.post("/house/enter",{ "id": id,
+          "password": pwd})
+        .then(response => {
+          this.loading.close();
+          if(response.data.code=="20000"){
+            this.houseId = id;
+            this.housePwd = pwd;
+            this.connectType = "enter";
+            this.play();
+            this.musichouse = name;
+             document
+                .querySelectorAll(".mu-tooltip")
+                .forEach(el => (el.style.display = "none"));
+          }else{
+            this.$toast.message(response.data.message);
+          }
+         
+        })
+        .catch(error => {
+            this.loading.close();
+        })
+  
+    },
     getHouses() {
       let stompClient = this.$store.getters.getStompClient;
       stompClient.send("/house/search", {}, JSON.stringify({}));
+    },
+    getHomeHouses() {
+       this.$http.post("/house/search",{})
+        .then(response => {
+          if(response.data.code=="20000"){
+            this.homeHouses = response.data.data;
+          }
+         
+        })
+        .catch(error => {
+        })
+     
     },
     clearScr() {
       document.getElementById("chat-container").innerHTML = "";
@@ -1423,8 +1749,25 @@ export default {
     }
   },
   watch: {
+    sourceGd:function(newValue,oldValue){
+      this.currentGd=1;
+      if(newValue=="qq_user"){
+          this.placeHolderGd= "qq用户id即qq号";
+      }else if(newValue =="wy_user"){
+          this.placeHolderGd="用户id不知，点右上用户";
+      }else{
+          let placeholders = ["搜索[民谣]来听下吧","试下为空搜索(*^__^*)","请输入关键字，如'摇滚'"];
+          this.placeHolderGd= placeholders[Math.floor(Math.random()*3)];
+      }
+    },
+    source:function(newValue,oldValue){
+         this.current=1;
+         let placeholders = ["请输入关键字搜索,如'遇见'","歌单id搜索:'*歌单id'","不知听啥，点右上歌单..."];
+          this.placeHolderGq= placeholders[Math.floor(Math.random()*3)];
+    
+    },
     playingId:function(newValue,oldValue){
-      if(newValue != oldValue){
+      if(newValue !="" && newValue != oldValue){
           let _this = this;
       this.albumRotate = false;
       document.querySelector("#music").volume =
@@ -1497,6 +1840,13 @@ export default {
   },
   mounted() {
     this.getScreenWidth();
+     this.$nextTick(function () {
+      this.$http.defaults.baseURL = baseUrl;
+
+      this.getHomeHouses();
+    // Code that will run only after the
+    // entire view has been rendered
+    })
   },
   created() {
     // let val = this.albumRotateSize;
