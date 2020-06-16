@@ -13,7 +13,7 @@ import 'muse-ui-message/dist/muse-ui-message.css';
 import Loading from 'muse-ui-loading';
 import Message from 'muse-ui-message';
 
-import axios from 'axios'
+import axios from 'axios';
 
 // 给Vue实例添加一个是个属性，这样在每个实例中就可以使用this.$http来访问axios实例了
 Vue.prototype.$http = axios

@@ -30,6 +30,7 @@
     "sass-loader": "^8.0.0",
     "sockjs-client": "^1.4.0",
     "stompjs": "^2.3.3",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "weixin-js-sdk": "^1.6.0"
   }
 }

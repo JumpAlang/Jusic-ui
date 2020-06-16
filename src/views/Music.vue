@@ -14,7 +14,7 @@
                   md="5"
                   lg="4"
                   xl="3"
-                  style="text-align: center; padding: 0 0 40px 0;"
+                  style="text-align: center; padding: 0 0 40px 0;" @click="playMusic"
                 >
                   <mu-avatar
                     :size="albumRotateSize"
@@ -318,8 +318,8 @@
         <audio id="music2" :src="music2.url" style="display: none"></audio>
       </div>
     </div>
-    <div id="play" v-if="!isPlay" :style="backgroundDiv">
-    <mu-flex class="flex-wrapper" justify-content="end">
+    <div id="play" v-if="!isPlay" :style="backgroundDiv" >
+    <mu-flex class="flex-wrapper" justify-content="end" style="margin-top:10px;">
       <mu-button color="info" flat @click="linkDownload('http://www.alang.run/release')">
        <mu-icon left value="android"></mu-icon>
           APP</mu-button>
@@ -710,6 +710,7 @@ import { sendUtils, messageUtils, timeUtils, musicUtils } from "../utils";
 import { baseUrl, isProduction } from "../config/environment";
 import Navigation from "../components/Navigation";
 import ChatSearchPicture from "../components/ChatSearchPicture";
+import wx from 'weixin-js-sdk';
 export default {
   name: "Music",
   components: {
@@ -835,6 +836,9 @@ export default {
     houseId:"",
     housePwd:"123",
     connectType:"",
+    houseIdNoAction:"",
+    housePwdNoAction:"123",
+    connectTypeNoAction:"",
     placeHolderGd:'试下为空搜索下(*^__^*)',
     placeHolderGq:'请输入关键字搜索',
      backgroundDiv:{
@@ -862,7 +866,7 @@ export default {
       let socketClient = this.$store.getters.getSocketClient;
       let stompClient = this.$store.getters.getStompClient;
 
-      socketClient = new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); // new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);//
+      socketClient =new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); // new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);// 
       stompClient = Stomp.over(socketClient);
 
       if (isProduction) {
@@ -1334,6 +1338,9 @@ export default {
           case messageUtils.messageType.ENTER_HOUSE:
             this.loading.close();
             if (Number(messageContent.code) === 20000) {
+              this.houseId = this.houseIdNoAction;
+              this.housePwd = this.housePwdNoAction;
+              this.connectType = this.connectTypeNoAction;
               this.musichouse = this.houseForward;
               // console.log('root success')
               this.openHouse = false;
@@ -1349,6 +1356,9 @@ export default {
             this.loading.close();
             if (Number(messageContent.code) === 20000) {
               this.musichouse = this.house.name;
+              this.houseId = messageContent.data;
+              this.housePwd = this.house.password;
+              this.connectType = "";
               // console.log('root success')
               this.openHouse = false;
               document
@@ -1628,6 +1638,7 @@ export default {
           if(response.data.code=="20000"){
             this.houseId = response.data.data;
             this.housePwd = this.homeHouse.password;
+            this.connectType = "";
             this.play();
             this.musichouse = this.homeHouse.name;
                 document
@@ -1684,7 +1695,9 @@ export default {
     },
     houseEnter(id, name, pwd) {
       this.loading = this.$loading({ overlayColor: "hsla(0, 0%, 100%, .5)" });
-
+      this.houseIdNoAction = id;
+      this.housePwdNoAction = pwd;
+      this.connectTypeNoAction = "enter";
       this.houseForward = name;
       let stompClient = this.$store.getters.getStompClient;
       stompClient.send(
@@ -1742,13 +1755,24 @@ export default {
       document.getElementById("chat-container").innerHTML = "";
     },
     setCurrentTime() {
-      this.playingId= this.$store.getters.getPlayerMusic.id + this.$store.getters.getPlayerMusic.source;
+      this.playingId= this.$store.getters.getPlayerMusic.id + this.$store.getters.getPlayerMusic.source+this.$store.getters.getPlayerMusic.pushTime;
     
     },
     linkDownload (url) {
 
       window.open(url,'_blank') // 新窗口打开外链接
 
+    },
+    playMusic(){
+        document.querySelector("#music").play();
+    },
+    createTouchstartEventAndDispatch (el) {
+      try{
+         let event = document.createEvent('Events');
+         event.initEvent('touchstart', true, true);
+         el.dispatchEvent(event);
+      }catch(Exception){
+      }
     }
   },
   watch: {
@@ -1770,21 +1794,19 @@ export default {
     
     },
     playingId:function(newValue,oldValue){
+      let _this = this;
       if(newValue !="" && newValue != oldValue){
-          let _this = this;
-      this.albumRotate = false;
-      document.querySelector("#music").volume =
+        this.albumRotate = false;
+        document.querySelector("#music").volume =
         Number(this.$store.getters.getPlayerVolume) / 100;
-      // 解决部分移动端不能自动播放
-      document.addEventListener("touchstart", function() {
-        document.querySelector("#music").play();
-      });
+
       setTimeout(function() {
         _this.albumRotate = true;
         let pushTime = _this.$store.getters.getPlayerMusic.pushTime;
         if (pushTime) {
           document.querySelector("#music").currentTime =
             (Date.now() - pushTime) / 1000;
+             _this.createTouchstartEventAndDispatch(document);
         }
       }, 1000);
       }
@@ -1794,9 +1816,76 @@ export default {
         this.getHouses();
       }
     },
-    // "$store.state.player.music": function(newValue, oldValue) {
-    
-    // },
+    "$store.state.player.music": function(newValue, oldValue) {
+      // var audio = document.getElementById("music");
+      // 解决部分移动端不能自动播放
+      document.addEventListener("touchstart", function() {
+        //_this.$toast.message("调用touchstart");
+        document.getElementById("music").play();
+        // audio.play();
+      });
+
+        if (window.WeixinJSBridge) {
+            WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+                document.getElementById("music").play();
+            }, false);
+        } else {
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+                    document.getElementById("music").play();
+                });
+            }, false);
+        }
+
+      // wx.ready(function() {
+      //     _this.$toast.message("调用weixin");
+      //     document.querySelector("#music").play();
+      // });
+      // this.createTouchstartEventAndDispatch(document);
+      // wx.config({
+      //           debug:false,
+      //           appId:"",
+      //           timestamp:1,
+      //           nonceStr:"",
+      //           signature:"",
+      //           jsApiList:[]
+      //       });
+      //       wx.ready(function(){
+      //           var autoplayVideo=document.getElementById("music");
+      //           autoplayVideo.play()
+      //       })
+      // this.albumRotate = false;
+             // 解决部分移动端不能自动播放
+      // document.addEventListener("touchstart", function() {
+      //   document.querySelector("#music").play();
+      // });
+      // document.addEventListener("touchend", function() {
+      //   let audio =  document.querySelector("#music");
+      //   if(audio.paused){
+      //     audio.play();
+      //   }
+      // });
+      //  document.addEventListener("touchcancel", function() {
+      //   let audio =  document.querySelector("#music");
+      //   if(audio.paused){
+      //     audio.play();
+      //   }
+      // });
+      //  document.addEventListener("click", function() {
+      //   let audio =  document.querySelector("#music");
+      //   if(audio.paused){
+      //     audio.play();
+      //   }
+      // });
+      // setTimeout(function() {
+      //   _this.albumRotate = true;
+      //   let pushTime = _this.$store.getters.getPlayerMusic.pushTime;
+      //   if (pushTime) {
+      //     document.querySelector("#music").currentTime =
+      //       (Date.now() - pushTime) / 1000;
+      //   }
+      // }, 1000);
+    },
     "$store.state.chat.data": function(newValue, oldValue) {
       setTimeout(function() {
         let chat = document.querySelector("#chat-container");
@@ -1850,6 +1939,15 @@ export default {
     // Code that will run only after the
     // entire view has been rendered
     })
+    wx.config({
+            // 配置信息, 即使不正确也能使用 wx.ready
+            debug: false,
+            appId: '',
+            timestamp: 1,
+            nonceStr: '',
+            signature: '',
+            jsApiList: []
+        });
   },
   created() {
     // let val = this.albumRotateSize;
