@@ -686,7 +686,7 @@
       </mu-appbar>
         <mu-flex class="flex-wrapper" justify-content="center">
           <mu-card style="max-width: 375px;margin: 20px auto;"  align="center">
-          <mu-card-header :title="musichouse" :sub-title="homeDesc?(homeDesc):'享受生活，享受音乐'" align="left">
+          <mu-card-header :title="musichouse" :sub-title="homeDesc?(homeDesc):'做一个自带背景音乐的人'" align="left">
           <mu-avatar slot="avatar" size="50">
               <img src="../assets/images/logo.png">
           </mu-avatar>
@@ -1904,12 +1904,18 @@ export default {
     },
     //生成二维码
     getQRcode() {
-      for(let i = 0; i < this.homeHouses.length; i++){
-        if(this.homeHouses[i].id == this.houseId){
-          this.homeDesc = this.homeHouses[i].desc;
-          break;
-        }
-      }
+      this.homeDesc = "";
+       this.$http.post("/house/get",{  id: this.houseId})
+        .then(response => {
+          if(response.data.code=="20000"){
+            this.homeDesc = response.data.data.desc;
+          }else{
+            this.$toast.message(response.data.message);
+          }
+         
+        })
+        .catch(error => {
+        })
       let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd+"&houseName="+this.musichouse;
       this.qrcodeVue.value = "http://www.alang.run/syncmusic?"+encodeURIComponent(queryString);	// 二维码内容
     },
