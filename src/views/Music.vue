@@ -685,7 +685,7 @@
         <mu-button slot="right" flat @click="openShare = !openShare">X</mu-button>
       </mu-appbar>
         <mu-flex class="flex-wrapper" justify-content="center">
-          <mu-card style="max-width: 375px;margin: 20px auto;"  align="center">
+          <mu-card style="max-width: 375px;margin-top: 20px;"  align="center">
           <mu-card-header :title="musichouse" :sub-title="homeDesc?(homeDesc):'做一个自带背景音乐的人'" align="left">
           <mu-avatar slot="avatar" size="50">
               <img src="../assets/images/logo.png">
