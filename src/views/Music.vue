@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="isPlay">
-      <navigation :musichouse="musichouse"></navigation>
+      <navigation :musichouse="musichouse" @openShareDialog="openShare = !openShare"></navigation>
       <mu-container class="demo-container">
         <mu-row style="margin-bottom: 40px;"></mu-row>
         <mu-row gutter>
@@ -247,6 +247,22 @@
                     style="cursor: pointer; color: #009688;"
                   >[图片]</span>”
                 </p>
+                <br/>
+                 <p>
+                  倒计时退出房间
+                   输入 “
+                  <span style="color: #009688;">倒计时退出 1</span>”
+                  则将在1分钟后退出房间。取消倒计时退出：<span style="color: #009688;">取消退出</span>”
+
+                </p>
+                <br/>
+                 <p>
+                  如果有什么好的想法、建议或问题可以单项向管理员发送消息，（＾∀＾●）ﾉｼ
+                  “
+                  <span style="color: #009688;">@管理员 内容</span>”,
+                  空格隔开哦!
+                </p>
+                <p>另外也可以在项目仓库开个 issue 进行公开讨论</p>
                 <br />
                 <p>
                   <span style="color: orange;">管理员功能</span>
@@ -287,15 +303,15 @@
                   <span style="color: #009688;">漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。<br/><br/>
                   15.用户黑名单： “
                   <span style="color: #009688;">用户黑名单</span>” 。<br/><br/>
+                  16.设置点歌人：“
+                  <span style="color: #009688;">设置点歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
+                  <span style="color: #009688;">取消点歌人 用户id</span>” 。<br/><br/>
+                  17.设置切歌人：“
+                  <span style="color: #009688;">设置切歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
+                  <span style="color: #009688;">取消切歌人 用户id</span>” 。<br/><br/>
                 </p>
                 <br />
-                <p>
-                  如果有什么好的想法、建议或问题可以单项向管理员发送消息，（＾∀＾●）ﾉｼ
-                  “
-                  <span style="color: #009688;">@管理员 内容</span>”,
-                  空格隔开哦!
-                </p>
-                <p>另外也可以在项目仓库开个 issue 进行公开讨论</p>
+               
               </div>
             </mu-col>
           </mu-col>
@@ -358,7 +374,15 @@
         </mu-flex>
       </mu-form>
       </mu-flex>
-      
+      <mu-dialog id="sharereach"  width="100%"
+      transition="slide-bottom"
+      fullscreen :open.sync="openShareReach">
+       <mu-appbar color="primary" :title="houseReachName">
+        <mu-button slot="right" flat @click="openShareReach = !openShareReach">X</mu-button>
+      </mu-appbar>
+       <mu-icon @click="reachHouse" value="play_circle_filled" color="primary" size="150"
+                     style="position: fixed; top: calc(50% - 75px); left: calc(50% - 75px); cursor: pointer;"></mu-icon>
+    </mu-dialog>
     </div>
     <mu-dialog id="search" width="100%"
       transition="slide-bottom"
@@ -654,6 +678,33 @@
         </mu-row>
       </mu-container>
     </mu-dialog>
+     <mu-dialog id="share"  width="100%"
+      transition="slide-bottom"
+      fullscreen :open.sync="openShare">
+       <mu-appbar color="primary" title="分享">
+        <mu-button slot="right" flat @click="openShare = !openShare">X</mu-button>
+      </mu-appbar>
+        <mu-flex class="flex-wrapper" justify-content="center">
+          <mu-card style="max-width: 375px;margin: 20px auto;"  align="center">
+          <mu-card-header :title="musichouse" :sub-title="homeDesc?(homeDesc):'享受生活，享受音乐'" align="left">
+          <mu-avatar slot="avatar" size="50">
+              <img src="../assets/images/logo.png">
+          </mu-avatar>
+          </mu-card-header>
+          <mu-card-media>
+          <qrcode-vue
+	          id="qrcodeBox"
+            level="H"
+	          :size="qrcodeVue.size"
+	          :value="qrcodeVue.value"
+	          :background="qrcodeVue.bgColor"
+	          :foreground="qrcodeVue.fgColor">
+         </qrcode-vue>
+        </mu-card-media>
+       <mu-card-title title="分享链接" :sub-title="qrcodeVue.value"></mu-card-title>
+      </mu-card>
+    </mu-flex>
+    </mu-dialog>
     <mu-dialog id="search-picture" width="auto" :open.sync="openPictureSearch">
       <chat-search-picture></chat-search-picture>
     </mu-dialog>
@@ -711,11 +762,13 @@ import { baseUrl, isProduction } from "../config/environment";
 import Navigation from "../components/Navigation";
 import ChatSearchPicture from "../components/ChatSearchPicture";
 import wx from 'weixin-js-sdk';
+import QrcodeVue from "qrcode.vue";
 export default {
   name: "Music",
   components: {
     Navigation,
-    ChatSearchPicture
+    ChatSearchPicture,
+    QrcodeVue
   },
   filters: {
     ellipsis (value) {
@@ -853,7 +906,19 @@ export default {
          "background-size": "cover",
          "-webkit-background-size": "cover",
         "-o-background-size": "cover"
-    }
+    },
+     qrcodeVue: {
+        size: 250,
+        bgColor: "#fff",
+        fgColor: "#000",
+        value: ""	//二维码地址
+      },
+      openShare:false,
+      openShareReach:false,
+      houseReachId:'',
+      houseReachName:'直达房间',
+      homeDesc:'',
+      closeClock:null
    } ),
   methods: {
     play: function() {
@@ -861,7 +926,7 @@ export default {
       this.isPlay = !this.isPlay;
       this.connect();
     },
-    connect: function(houseId) {
+    connect: function() {
       let _this = this;
       let socketClient = this.$store.getters.getSocketClient;
       let stompClient = this.$store.getters.getStompClient;
@@ -918,6 +983,8 @@ export default {
 
       stompClient.disconnect();
       socketClient.close();
+      this.isPlay = false;
+      this.playingId = "";
 
       this.saveSocket(socketClient, stompClient);
     },
@@ -1089,6 +1156,19 @@ export default {
           stompClient.send("/music/volumn/" + content, {}, "");
 
           break;
+         case "倒计时退出":
+          content = sendUtils.parseContent(instruction, chatMessage);
+          if(!/^\d+$/.test(content)){
+            this.$toast.message("请输入要在几分钟后退出");
+          }else{
+            this.setTimeToClose(content);
+            this.$toast.message("设置成功，将在"+content+"分钟后退出");
+          }
+          break;
+        case "取消退出":         
+          this.setTimeToClose(0);
+          this.$toast.message("取消成功");
+          break;
         case "修改密码":
           content = sendUtils.parseContent(instruction, chatMessage);
 
@@ -1158,6 +1238,54 @@ export default {
                 sessionId: content,
                 sendTime: Date.now()
               })
+            );
+          }
+          break;
+         case "设置点歌人":
+          content = sendUtils.parseContent(instruction, chatMessage);
+          if (content === "") {
+            // console.log('请输入要拉黑的用户 session', chatMessage)
+          } else {
+            stompClient.send(
+              "/auth/setPicker/"+content,
+              {},
+              ""
+            );
+          }
+          break;
+         case "取消点歌人":
+          content = sendUtils.parseContent(instruction, chatMessage);
+          if (content === "") {
+            // console.log('请输入要拉黑的用户 session', chatMessage)
+          } else {
+            stompClient.send(
+              "/auth/setNoPicker/"+content,
+              {},
+              ""
+            );
+          }
+          break;
+           case "设置切歌人":
+          content = sendUtils.parseContent(instruction, chatMessage);
+          if (content === "") {
+            // console.log('请输入要拉黑的用户 session', chatMessage)
+          } else {
+            stompClient.send(
+              "/auth/setVoter/"+content,
+              {},
+              ""
+            );
+          }
+          break;
+         case "取消切歌人":
+          content = sendUtils.parseContent(instruction, chatMessage);
+          if (content === "") {
+            // console.log('请输入要拉黑的用户 session', chatMessage)
+          } else {
+            stompClient.send(
+              "/auth/setNoVoter/"+content,
+              {},
+              ""
             );
           }
           break;
@@ -1773,6 +1901,43 @@ export default {
          el.dispatchEvent(event);
       }catch(Exception){
       }
+    },
+    //生成二维码
+    getQRcode() {
+      for(let i = 0; i < this.homeHouses.length; i++){
+        if(this.homeHouses[i].id == this.houseId){
+          this.homeDesc = this.homeHouses[i].desc;
+          break;
+        }
+      }
+      let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd+"&houseName="+this.musichouse;
+      this.qrcodeVue.value = "http://www.alang.run/syncmusic?"+encodeURIComponent(queryString);	// 二维码内容
+    },
+    reachHouse(){
+      let housePwd = this.getUrlKey("housePwd");
+      this.homeHouseEnter(this.houseReachId,this.houseReachName,housePwd);
+    },
+    getUrlKey(name){
+    if(window.location.href.indexOf("?houseId") != -1){
+       let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+       let r = decodeURIComponent(window.location.search).substr(1).match(reg);  //获取url中"?"符后的字符串并正则匹配
+       let context = ""; 
+       if (r != null) 
+          context = r[2]; 
+       reg = null; 
+       r = null; 
+       return context == null || context == "" || context == "undefined" ? "" : context; 
+    }else{
+      return null;
+    }
+    },
+    setTimeToClose(minutes){
+      if(this.closeClock){
+        window.clearTimeout(this.closeClock);
+      }
+      if(minutes != 0){
+          this.closeClock = window.setTimeout(this.close,minutes*60*1000);
+      }
     }
   },
   watch: {
@@ -1814,6 +1979,11 @@ export default {
     openHouse: function(newOpenHouse, oldOpenHouse) {
       if (newOpenHouse) {
         this.getHouses();
+      }
+    },
+     openShare: function(newOpenHouse, oldOpenHouse) {
+      if (newOpenHouse) {
+        this.getQRcode();
       }
     },
     "$store.state.player.music": function(newValue, oldValue) {
@@ -1936,6 +2106,19 @@ export default {
       this.$http.defaults.baseURL = baseUrl;
 
       this.getHomeHouses();
+      try{
+          let houseId = this.getUrlKey("houseId");
+          if(houseId){
+            this.openShareReach = true;
+            this.houseReachId=houseId;
+            this.houseReachName=this.getUrlKey("houseName");
+          }
+      }catch(Exception){
+
+      }
+   
+
+
     // Code that will run only after the
     // entire view has been rendered
     })

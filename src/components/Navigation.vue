@@ -5,6 +5,7 @@
                 <mu-icon value="menu"></mu-icon>
             </mu-button>
            {{musichouse}}
+            <mu-button slot="right" flat @click="handleClick">分享</mu-button>
         </mu-appbar>
         <mu-drawer width="300" :open.sync="isOpenDrawer" :docked="false" :right="false">
             <mu-card style="width: 100%; max-width: 375px; margin: 0 auto;">
@@ -35,6 +36,12 @@
                     <mu-list-item-title>Jusic-serve</mu-list-item-title>
                 </mu-list-item>
             </mu-list>
+        <mu-divider></mu-divider>
+            <mu-sub-header>赞赏</mu-sub-header>
+           <mu-card-media 
+                               style="max-height: 200px; overflow: hidden">
+                    <img src="../assets/images/aplause.jpg">
+                </mu-card-media>
         </mu-drawer>
     </div>
 </template>
@@ -49,7 +56,9 @@
             isOpenDrawer: false
         }),
 	methods:{
-		
+		handleClick(){
+            this.$emit('openShareDialog',true);
+        }
 	}
     }
 </script>
