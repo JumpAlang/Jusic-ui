@@ -61,7 +61,7 @@
                 this.$store.commit('setSearchPictureKeyword', value);
             },
             search: function () {
-                console.log(`搜索图片`);
+                // console.log(`搜索图片`);
                 this.paginationCurrent = 1;
                 let stompClient = this.$store.getters.getStompClient;
                 stompClient.send('/chat/picture/search', {}, JSON.stringify({
