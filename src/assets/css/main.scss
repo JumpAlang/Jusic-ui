@@ -199,6 +199,7 @@ body, table, tr, td, th {
 }
 #house_dialog   .mu-dialog-body {
   max-width: 100%;
+  max-height:100%;
 }
 #searchGd   .mu-dialog-body {
   max-width: 100%;
@@ -234,12 +235,13 @@ body, table, tr, td, th {
 }
 
 
-#share .mu-card{
-  background-color: #263238 !important;
-
-}
 #share .mu-card-header-title .mu-card-sub-title{
   font-size: 12px !important;
+  color:rgba(0,0,0,.57) !important;
+}
+#share .mu-card-header-title .mu-card-title{
+  font-size: 15px !important;
+  color:black !important;
 }
 #sharereach .mu-dialog-body {
   max-width: 100%;
@@ -249,4 +251,9 @@ body, table, tr, td, th {
 #share .mu-card-title-container .mu-card-sub-title{
   font-size: 12px !important;
   word-wrap:break-word;
+  color:rgba(0,0,0,.57) !important;
+}
+
+#share .mu-card-title-container .mu-card-title{
+  color:black !important;
 }
