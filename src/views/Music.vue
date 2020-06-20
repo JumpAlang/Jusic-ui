@@ -1916,7 +1916,7 @@ export default {
         })
         .catch(error => {
         })
-      let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd+"&houseName="+this.musichouse;
+      let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd;
       this.qrcodeVue.value = "http://www.alang.run/syncmusic?"+encodeURIComponent(queryString);	// 二维码内容
     },
     reachHouse(){
@@ -2114,11 +2114,22 @@ export default {
       this.getHomeHouses();
       try{
           let houseId = this.getUrlKey("houseId");
+          console.log(houseId);
           if(houseId){
             this.openShareReach = true;
             this.houseReachId=houseId;
-            this.houseReachName=this.getUrlKey("houseName");
-          }
+            this.$http.post("/house/get",{  id: houseId})
+              .then(response => {
+              if(response.data.code=="20000"){
+                    this.houseReachName = response.data.data.name;
+              }else{
+                  this.$toast.message(response.data.message);
+              }
+         
+          })
+            .catch(error => {
+            })
+         }
       }catch(Exception){
 
       }
