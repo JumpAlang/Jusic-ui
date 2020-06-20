@@ -2114,7 +2114,6 @@ export default {
       this.getHomeHouses();
       try{
           let houseId = this.getUrlKey("houseId");
-          console.log(houseId);
           if(houseId){
             this.openShareReach = true;
             this.houseReachId=houseId;
