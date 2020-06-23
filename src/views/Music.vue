@@ -1488,6 +1488,10 @@ export default {
               document
                 .querySelectorAll(".mu-tooltip")
                 .forEach(el => (el.style.display = "none"));
+              let userName = window.localStorage.getItem("USER_NAME");
+              if (userName) {
+                this.settingName(userName);
+               }
             } else {
               this.$toast.message(messageContent.message);
               this.getHouses();
@@ -1505,6 +1509,9 @@ export default {
               document
                 .querySelectorAll(".mu-tooltip")
                 .forEach(el => (el.style.display = "none"));
+                 if (userName) {
+                this.settingName(userName);
+               }
             } else {
               this.$toast.message(messageContent.message);
             }
