@@ -335,20 +335,30 @@
       </div>
     </div>
     <div id="play" v-if="!isPlay" :style="backgroundDiv" >
-    <mu-flex class="flex-wrapper" justify-content="end" style="margin-top:10px;">
+    <mu-flex class="flex-wrapper" align-items="center">
+       <mu-flex class="flex-wrapper" justify-content="start" fill style="margin-top:10px;">
+      <mu-button color="info" flat @click="linkDownload('http://www.alang.run/sponsor')">
+       <mu-icon left value="favorite"></mu-icon>
+          赞赏</mu-button>
+    </mu-flex>
+    <mu-flex class="flex-wrapper" justify-content="end" fill style="margin-top:10px;">
       <mu-button color="info" flat @click="linkDownload('http://www.alang.run/release')">
        <mu-icon left value="android"></mu-icon>
           APP</mu-button>
     </mu-flex>
+    </mu-flex>
     <mu-flex class="flex-wrapper" justify-content="center" style="margin-top:10px;" wrap="wrap">
       <mu-flex  v-for="house, index in homeHouses" :key="house.id" @click="enterHomeHouse(house.id,house.name,house.needPwd)">
           <mu-tooltip  :content="house.desc">
-            <mu-chip class="demo-chip" color="teal" style="margin:5px 3px;">
+
+           <mu-badge :content="house.population?house.population+'':'0'" circle color="info"  style="margin:8px 7px;" class="demo-icon-badge">
+            <mu-chip class="demo-chip" color="teal">
               <mu-avatar :size="32" color="blue300">
                 <mu-icon :value="house.needPwd?'lock':'lock_open'"></mu-icon>
               </mu-avatar>
               {{house.name}}
             </mu-chip>
+           </mu-badge>
           </mu-tooltip>
       </mu-flex>
         
@@ -739,13 +749,16 @@
           :key="houseItem.id"
           @click="enterHouse(houseItem.id,houseItem.name,houseItem.needPwd)" >
            <mu-tooltip :content="houseItem.desc">
-            <mu-chip class="demo-chip" color="teal" style="margin:5px 3px;">
+            <mu-badge :content="houseItem.population?houseItem.population+'':'0'" circle color="info"  style="margin:8px 7px;" class="demo-icon-badge">
+            <mu-chip class="demo-chip" color="teal">
               <mu-avatar :size="32" color="blue300">
                 <mu-icon :value="houseItem.needPwd?'lock':'lock_open'"></mu-icon>
               </mu-avatar>
               {{houseItem.name}}
             </mu-chip>
+            </mu-badge>
           </mu-tooltip>
+        
         </mu-flex>
          
       </mu-flex>
