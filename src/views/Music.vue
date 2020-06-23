@@ -1509,7 +1509,8 @@ export default {
               document
                 .querySelectorAll(".mu-tooltip")
                 .forEach(el => (el.style.display = "none"));
-                 if (userName) {
+              let userName = window.localStorage.getItem("USER_NAME");
+              if (userName) {
                 this.settingName(userName);
                }
             } else {
