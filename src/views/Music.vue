@@ -1938,7 +1938,7 @@ export default {
         .catch(error => {
         })
       let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd;
-      this.qrcodeVue.value = "http://www.alang.run/syncmusic?"+encodeURIComponent(queryString);	// 二维码内容
+      this.qrcodeVue.value = "http://music.alang.run?"+encodeURIComponent(queryString);	// 二维码内容
     },
     reachHouse(){
       let housePwd = this.getUrlKey("housePwd");
