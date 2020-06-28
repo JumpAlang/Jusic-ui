@@ -908,6 +908,7 @@ export default {
     placeHolderGd:'试下为空搜索下(*^__^*)',
     placeHolderGq:'请输入关键字搜索',
      backgroundDiv:{
+       overflow:"auto",
        position:"fixed",
        top:0,
        left: 0,
