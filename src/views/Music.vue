@@ -35,7 +35,12 @@
                 <mu-col span="12" sm="12" md="7" lg="8" xl="9">
                   <div
                     style="font-size: 24px; font-weight: 400; margin: 4px 0 10px 0; min-height: 31px;"
-                  >{{ music ? music.name : "" }}</div>
+                  >{{ music ? music.name : "" }}
+                   <mu-button flat color="teal" style="float:right;" @click="searchTop">
+                    <mu-icon left value="wb_sunny"></mu-icon>
+                      热歌榜
+                    </mu-button>
+                  </div>
                   <div style="font-size: 16px; font-weight: 400; margin: 10px 0; min-height: 21px;">
                     专辑: &nbsp;{{
                     music.album ? "《" + music.album.name + "》" : ""
@@ -908,6 +913,7 @@ export default {
     placeHolderGd:'试下为空搜索下(*^__^*)',
     placeHolderGq:'请输入关键字搜索',
      backgroundDiv:{
+       overflow:"auto",
        position:"fixed",
        top:0,
        left: 0,
@@ -1965,6 +1971,13 @@ export default {
       if(minutes != 0){
           this.closeClock = window.setTimeout(this.close,minutes*60*1000);
       }
+    },
+    searchTop(){
+       this.openSearch = true;
+       this.$store.commit("setSearchKeyword",  "*热歌榜");
+       this.source = "wy";
+       this.current = 1;
+       this.search();
     }
   },
   watch: {
