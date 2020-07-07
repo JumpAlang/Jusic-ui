@@ -60,9 +60,13 @@ export let messageUtils = {
 		GOODMODEL:'GOODMODEL',
         SEARCH_HOUSE:'SEARCH_HOUSE',
         ENTER_HOUSE:"ENTER_HOUSE",
+        ENTER_HOUSE_START:"ENTER_HOUSE_START",
         ADD_HOUSE:"ADD_HOUSE",
+        ADD_HOUSE_START:"ADD_HOUSE_START",
         SEARCH_SONGLIST:"SEARCH_SONGLIST",
-        SEARCH_USER:"SEARCH_USER"
+        SEARCH_USER:"SEARCH_USER",
+        ANNOUNCEMENT:"ANNOUNCEMENT"
+
     },
     isKnowMessageType: {},
     parseMessageType: {},

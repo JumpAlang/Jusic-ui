@@ -2,8 +2,9 @@
   <div>
     <div v-if="isPlay">
       <navigation :musichouse="musichouse" @openShareDialog="openShare = !openShare"></navigation>
+     
       <mu-container class="demo-container">
-        <mu-row style="margin-bottom: 40px;"></mu-row>
+             <mu-row style="margin-bottom: 23px;"></mu-row> 
         <mu-row gutter>
           <mu-col span="12" sm="12" md="8" lg="8" xl="9">
             <mu-col span="12">
@@ -16,6 +17,7 @@
                   xl="3"
                   style="text-align: center; padding: 0 0 40px 0;" @click="playMusic"
                 >
+               
                   <mu-avatar
                     :size="albumRotateSize"
                     style="border: 2px solid rgba(26, 26, 26, 0.5); overflow: hidden; box-shadow: inset 0 0 20px 2px #000;"
@@ -57,18 +59,21 @@
                     }}
                   </small>
                   <mu-linear-progress mode="determinate" :value="progress" color="#009688"></mu-linear-progress>
-                  <mu-slider
+                  <mu-flex justify-content="center">
+                    <mu-flex class="flex-demo" justify-content="start"><mu-icon value="volume_up" color="teal"></mu-icon></mu-flex>
+                    <mu-flex class="flex-demo" justify-content="start" fill> <mu-slider
                     class="demo-slider"
                     color="#009688"
                     v-model="volume"
                     style="color: rgb(0, 150, 136);"
-                  ></mu-slider>
+                  ></mu-slider></mu-flex>
+                  </mu-flex>      
                 </mu-col>
               </mu-row>
             </mu-col>
             <mu-col span="12">
               <mu-data-table
-                style="background-color: transparent"
+                style="background-color: transparent;max-height:380px;overflow:auto;"
                 :selectable="false"
                 :hover="false"
                 :columns="columns"
@@ -110,16 +115,16 @@
             <mu-col
               :style="
                 screenWidth < 766 && screenWidth !== 0
-                  ? 'margin: 100px 0 0 0;'
+                  ? 'margin: 60px 0 0 0;'
                   : ''
               "
             >
-              <div
-                style="font-size: 24px; font-weight: 400; margin: 4px 0 10px 0; min-height: 31px;"
-              >
-                实时聊天
-                <mu-chip color="green" @click="openHouse = !openHouse">房间</mu-chip>
-              </div>
+            <mu-flex justify-content="center" style="margin-bottom:10px;">
+              <mu-button round color="transparent" @click="openHouse = !openHouse">
+                    <mu-icon left value="account_balance"></mu-icon>
+                        听歌房
+              </mu-button> 
+              </mu-flex>
               <div style="font-size: 16px; font-weight: 400;">
                 在线人数: {{ online }}
                 <span style="float:right;cursor:pointer;color:gray;" @click="clearScr">清屏</span>
@@ -136,7 +141,7 @@
                       (isRoot || isAdmin) && item.type === "chat"
                       ? item.nickName + `[${item.sessionId}]`
                       : item.nickName
-                      }}
+                      }}{{item.sendTime?"  "+new Date(item.sendTime).getHours() +':' + new Date(item.sendTime).getMinutes() + ':' + new Date(item.sendTime).getSeconds():''}}
                     </small>
                   </div>
                   <div v-if="item.type === 'notice'">
@@ -170,11 +175,13 @@
                   class="width-size-100 chat-message"
                 ></mu-text-field>
                 <br />
-                <div style="color:white;">
-                  <mu-radio :value="'wy'" v-model="sourceChat" color="primary" :label="'网易'"></mu-radio>
-                  <mu-radio :value="'qq'" v-model="sourceChat" color="primary" :label="'QQ'"></mu-radio>
-                  <mu-radio :value="'mg'" v-model="sourceChat" color="primary" :label="'咪咕'"></mu-radio>
-                </div>
+                <div style="color:white;" >
+                  <mu-radio :value="'wy'" v-model="sourceChat" color="primary" :label="'网易'" class="searchSource"></mu-radio>
+                  <mu-radio :value="'qq'" v-model="sourceChat" color="primary" :label="'QQ'" class="searchSource"></mu-radio>
+                  <mu-radio :value="'mg'" v-model="sourceChat" color="primary" :label="'咪咕'" class="searchSource"></mu-radio>
+                  <mu-button flat color="primary" @click="openManual = !openManual"><mu-icon left value="assignment"></mu-icon>教程
+                  </mu-button>               
+             </div>
 
                 <mu-button
                   v-if="!isContented"
@@ -193,132 +200,16 @@
                   <mu-chip style="margin-right:10px;"
                     color="rgba(0, 150, 136, 0.5)"
                     @click="openPictureSearch = !openPictureSearch"
-                  >图片</mu-chip>
+                  >斗图</mu-chip>
                   <mu-chip style="margin-right:10px;"  color="rgba(0, 150, 136, 0.5)" @click="musicSkipVote">切歌</mu-chip>
-                  <mu-chip style="margin-right:10px;" color="rgba(0, 150, 136, 0.5)" @click="openSearch = !openSearch">歌曲</mu-chip>
+                  <mu-chip style="margin-right:10px;" color="rgba(0, 150, 136, 0.5)" @click="openSearch = !openSearch">点歌</mu-chip>
                   <mu-chip style="margin-right:10px;"  color="rgba(0, 150, 136, 0.5)" @click="openSearchGd = !openSearchGd">歌单</mu-chip>
              
              </div>
               </div>
             
             </mu-col>
-            <mu-col style="margin-bottom: 160px; ">
-              <div style="padding: 10px 0">
-                <mu-divider></mu-divider>
-               
-                <p>交流QQ群:1029454474,欢迎过来唠嗑。</p>
-                <p>
-                  提示：输入 “
-                  <span style="color: #009688;">点歌 歌名</span>”
-                  即可点歌。
-                </p>
-                <p>
-                  例如：
-                  <span style="color: #009688;">点歌 春夏秋冬</span>
-                </p>
-                <p>支持输入网易云音乐 ID 点歌</p>
-                <p>
-                  没有想要点的音乐？ 快试一试 “
-                  <span
-                    @click="openSearch = !openSearch"
-                    style="cursor: pointer; color: #009688;"
-                  >[歌曲]</span>“，如果知道歌单id，还可以在歌曲窗口直接加*搜索： <span style="color: #009688;">*歌单id</span><br/>不知道歌单id?或许歌单搜索你用得到：
-                  <span
-                    @click="openSearchGd = !openSearchGd"
-                    style="cursor: pointer; color: #009688;"
-                  >[歌单]</span>提示：歌单页面可以搜索网易歌单、网易用户id的歌单、qq歌单、qq用户id的歌单
-                </p>
-                <br />
-                <p>
-                  如点错歌曲可以输入 “
-                  <span style="color: #009688;">删除音乐 歌名</span>” 即可删除歌曲，管理员可以使用歌曲id删除。
-                </p>
-                <br />
-                <p>
-                  如遇不好听的歌可以输入 “
-                  <span style="color: #009688;">投票切歌</span>” 或者点击 “
-                  <span @click="musicSkipVote" style="cursor: pointer; color: #009688;">[切歌]</span>”，当投票人数大于在线人数 30% 时将会切歌。
-                </p>
-                <br />
-                <p>
-                  输入 “
-                  <span style="color: #009688;">设置昵称 名字</span>”
-                  可以设置自己的显示昵称，仅限当前客户端有效。
-                </p>
-                <p>
-                  想要斗图？ ┏ (゜ω゜)=☞ “
-                  <span
-                    @click="openPictureSearch = !openPictureSearch"
-                    style="cursor: pointer; color: #009688;"
-                  >[图片]</span>”
-                </p>
-                <br/>
-                 <p>
-                  倒计时退出房间
-                   输入 “
-                  <span style="color: #009688;">倒计时退出 1</span>”
-                  则将在1分钟后退出房间。取消倒计时退出：<span style="color: #009688;">取消退出</span>”
-
-                </p>
-                <br/>
-                 <p>
-                  如果有什么好的想法、建议或问题可以单项向管理员发送消息，（＾∀＾●）ﾉｼ
-                  “
-                  <span style="color: #009688;">@管理员 内容</span>”,
-                  空格隔开哦!
-                </p>
-                <p>另外也可以在项目仓库开个 issue 进行公开讨论</p>
-                <br />
-                <p>
-                  <span style="color: orange;">管理员功能</span>
-                </p>
-                <p>
-                  1.登录： “
-                  <span style="color: #009688;">admin 123456</span>” 。<br/><br/>
-                  2.修改密码： “
-                  <span style="color: #009688;">修改密码 123456</span>” 。<br/><br/>
-                  3.点赞模式（歌曲列表按点赞数排序）： “
-                  <span style="color: #009688;">点赞模式</span>” 退出则“
-                  <span style="color: #009688;">退出点赞模式</span>” 。<br/><br/>
-                  4.修改投票切歌率： “
-                  <span style="color: #009688;">投票切歌率 1</span>” 数值在(0,1]。<br/><br/>
-                  5.禁止切歌：“
-                  <span style="color: #009688;">禁止切歌</span>” 启用则“
-                  <span style="color: #009688;">启用切歌</span>” 。<br/><br/>
-                  6.禁止点歌：“
-                  <span style="color: #009688;">禁止点歌</span>” 启用则“
-                  <span style="color: #009688;">启用点歌</span>” 。<br/><br/>
-                  7.清空列表：“
-                  <span style="color: #009688;">清空列表</span>” 。<br/><br/>
-                  8.清空默认播放列表：“
-                  <span style="color: #009688;">清空默认列表</span>” 。<br/><br/>
-                  9.设置默认播放列表：“
-                  <span style="color: #009688;">设置默认列表 24381616,1</span>” 。<br/><br/>
-                  10.默认列表歌曲数：“
-                  <span style="color: #009688;">默认列表歌曲数</span>” 。<br/><br/>
-                  11.置顶音乐： “
-                  <span style="color: #009688;">置顶音乐 音乐id</span>” 音乐id即歌曲列表中歌曲后面那一串字母，如411214279。<br/><br/>
-                  12.拉黑音乐：“
-                  <span style="color: #009688;">拉黑音乐 音乐id</span>” 漂白则“
-                  <span style="color: #009688;">漂白音乐 音乐id</span>” 。<br/><br/>
-                  13.音乐黑名单： “
-                  <span style="color: #009688;">音乐黑名单</span>” 。<br/><br/>
-                  14.拉黑用户：“
-                  <span style="color: #009688;">拉黑用户 用户id</span>” 漂白则“
-                  <span style="color: #009688;">漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。<br/><br/>
-                  15.用户黑名单： “
-                  <span style="color: #009688;">用户黑名单</span>” 。<br/><br/>
-                  16.设置点歌人：“
-                  <span style="color: #009688;">设置点歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
-                  <span style="color: #009688;">取消点歌人 用户id</span>” 。<br/><br/>
-                  17.设置切歌人：“
-                  <span style="color: #009688;">设置切歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
-                  <span style="color: #009688;">取消切歌人 用户id</span>” 。<br/><br/>
-                </p>
-                <br />
-               
-              </div>
-            </mu-col>
+           
           </mu-col>
         </mu-row>
       </mu-container>
@@ -374,7 +265,7 @@
          <div align="center">
             <mu-text-field v-model="homeHouse.name" placeholder="房间名称"></mu-text-field>
           <mu-text-field v-model="homeHouse.desc" placeholder="房间描述"></mu-text-field>
-          <mu-text-field
+         <mu-text-field
           v-if="homeHouse.needPwd"
           placeholder="房间密码"
           v-model="homeHouse.password"
@@ -382,10 +273,14 @@
           :action-click="() => (visibility = !visibility)"
           :type="visibility ? 'text' : 'password'"
           ></mu-text-field>
-         </div>
+            <mu-text-field  action-icon="favorite"
+          :action-click="() => (linkDownload('http://www.alang.run/sponsor'))" v-if="homeHouse.enableStatus" v-model="homeHouse.retainKey" placeholder="赞赏200大洋订单号"></mu-text-field>
+          
+            </div>
         <mu-flex class="flex-wrapper" align-items="center">
-          <mu-flex class="flex-demo" justify-content="end" fill><mu-button color="primary" @click="createHomeHouse">创建房间</mu-button></mu-flex>
-          <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="homeHouse.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
+                    <mu-flex class="flex-demo" justify-content="end" fill> <mu-switch v-model="homeHouse.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
+          <mu-flex class="flex-demo" justify-content="center"><mu-button color="primary" @click="createHomeHouse">创建房间</mu-button></mu-flex>
+                    <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="homeHouse.enableStatus" color="primary" label="房间永存"></mu-switch></mu-flex>     
         </mu-flex>
       </mu-form>
       </mu-flex>
@@ -741,11 +636,13 @@
                 :action-click="() => (visibility = !visibility)"
                 :type="visibility ? 'text' : 'password'"
               ></mu-text-field>
+               <mu-text-field action-icon="favorite" :action-click="() => (linkDownload('http://www.alang.run/sponsor'))" v-if="house.enableStatus" v-model="house.retainKey" placeholder="赞赏200大洋订单号"></mu-text-field>
               </div>
 
               <mu-flex class="flex-wrapper" align-items="center">
-                <mu-flex class="flex-demo" justify-content="end" fill><mu-button color="primary" @click="createHouse">创建房间</mu-button></mu-flex>
-                <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="house.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
+                <mu-flex class="flex-demo" justify-content="end" fill> <mu-switch v-model="house.needPwd" color="primary" label="房间密码"></mu-switch></mu-flex>     
+                <mu-flex class="flex-demo" justify-content="start" ><mu-button color="primary" @click="createHouse">创建房间</mu-button></mu-flex>
+                <mu-flex class="flex-demo" justify-content="start" fill> <mu-switch v-model="house.enableStatus" color="primary" label="房间永存"></mu-switch></mu-flex>     
               </mu-flex>
             </mu-form>
         </mu-flex>
@@ -768,6 +665,144 @@
          
       </mu-flex>
     </mu-dialog>
+     <mu-drawer width="300" :open.sync="openManual" :docked="false" :right="true">
+            <mu-card style="width: 100%; max-width: 375px; margin: 0 auto;">
+                <mu-card-header title="使用教程" sub-title="欢迎加群1029454474交流">
+                    <mu-avatar size="45" slot="avatar">
+                        <img style="border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.2);" src="../assets/images/logo.png">
+                    </mu-avatar>
+                </mu-card-header>
+              
+                <mu-card-text>
+                  声明：本网站仅供学习交流。
+                </mu-card-text>
+            </mu-card>
+            <mu-card-title title="用户"  sub-title="以下命令在聊天框输入"></mu-card-title>
+            <mu-card-text>
+                <p>1.输入 “点歌   歌名” 即可点歌。例如：点歌 春夏秋冬，支持输入网易云音乐 ID 点歌。</p>
+                <br/>
+                 <p>
+                  2.没有想要点的音乐？ 请点击--> “
+                  <span
+                    @click="openManual = !openManual;openSearch = !openSearch"
+                    style="cursor: pointer; color: #009688;"
+                  >[点歌]</span>“，如果知道歌单id，还可以在歌曲窗口直接加*搜索： <span style="color: #009688;">*歌单id</span><br/>
+                </p>
+                <br/>
+                <p>
+                  3.不知道歌单id?,请点击--> 
+                  <span
+                    @click="openManual = !openManual;openSearchGd = !openSearchGd"
+                    style="cursor: pointer; color: #009688;"
+                  >[歌单]</span>提示：歌单页面可以搜索网易歌单、网易用户id的歌单、qq歌单、qq用户id的歌单
+                </p>
+                 <p>
+                  4.如点错歌曲可以输入 “
+                  <span style="color: #009688;">删除音乐 歌名</span>” 即可删除歌曲，管理员可以使用歌曲id删除。
+                </p>
+                <br />
+                <p>
+                  5.如遇不好听的歌可以输入 “
+                  <span style="color: #009688;">投票切歌</span>” 或者点击 “
+                  <span @click="musicSkipVote" style="cursor: pointer; color: #009688;">[切歌]</span>”，默认当投票人数大于在线人数 30% 时将会切歌。管理员可以设置切歌率。
+                </p>
+                <br />
+                <p>
+                  6.输入 “
+                  <span style="color: #009688;">设置昵称 名字</span>”
+                   可以设置自己的显示昵称，仅限当前客户端有效。
+                </p>
+                <p>
+                  7.想要斗图？ ┏ (゜ω゜)=☞ “
+                  <span
+                    @click="openManual = !openManual;openPictureSearch = !openPictureSearch"
+                    style="cursor: pointer; color: #009688;"
+                  >[斗图]</span>”
+                </p>
+                <br/>
+                 <p>
+                  8.倒计时退出房间
+                   输入 “
+                  <span style="color: #009688;">倒计时退出 1</span>”
+                  则将在1分钟后退出房间。取消倒计时退出：<span style="color: #009688;">取消退出</span>”
+                </p>
+                <br/>
+                 <p>
+                  9.如果有什么好的想法、建议或问题可以单项向管理员发送消息，（＾∀＾●）ﾉｼ
+                  “
+                  <span style="color: #009688;">@管理员 内容</span>”,
+                  空格隔开哦!
+                </p>
+                <p>另外也可以在项目仓库开个 issue 进行公开讨论</p>
+                 </mu-card-text>
+           
+        <mu-divider></mu-divider>
+          <mu-card-title title="管理员"  sub-title="以下命令在聊天框输入"></mu-card-title>
+            <mu-card-text>
+                 <p>
+                  1.登录： “
+                  <span style="color: #009688;">admin 123456</span>” 。
+                 </p>
+                 <br/>
+                 <p>
+                  2.修改密码： “
+                  <span style="color: #009688;">修改密码 654321</span>” 。
+                </p>
+                <br/>
+                 <p>
+                  3.管理员公告 “
+                  <span style="color: #009688;">公告 请文明聊天</span>”。
+                </p><br/>
+                <p>
+                  4.点赞模式（歌曲列表按点赞数排序）： “
+                  <span style="color: #009688;">点赞模式</span>” 退出则“
+                  <span style="color: #009688;">退出点赞模式</span>” 。
+                </p><br/>
+                <p>
+                  5.修改投票切歌率： “
+                  <span style="color: #009688;">投票切歌率 1</span>” 数值在(0,1]。如：设置成0.5则表示房间人数一半赞同即可切歌。</p><br/>
+                <p>
+                  6.禁止切歌：“
+                  <span style="color: #009688;">禁止切歌</span>” 启用则“
+                  <span style="color: #009688;">启用切歌</span>” 。</p><br/>
+                <p>
+                  7.禁止点歌：“
+                  <span style="color: #009688;">禁止点歌</span>” 启用则“
+                  <span style="color: #009688;">启用点歌</span>” 。</p><br/>
+                <p>
+                  8.清空列表：“
+                  <span style="color: #009688;">清空列表</span>” 。
+                </p><br/>
+                <p>
+                  9.清空默认播放列表：“
+                  <span style="color: #009688;">清空默认列表</span>” 。</p><br/>
+                <p> 10.设置默认播放列表：“
+                  <span style="color: #009688;">设置默认列表 24381616,1</span>” 。</p><br/>
+                <p> 11.默认列表歌曲数：“
+                  <span style="color: #009688;">默认列表歌曲数</span>” 。</p><br/>
+                <p>12.置顶音乐： “
+                  <span style="color: #009688;">置顶音乐 音乐id</span>” 音乐id即歌曲列表中歌曲后面那一串字母，如411214279。</p><br/>
+                <p>13.拉黑音乐：“
+                  <span style="color: #009688;">拉黑音乐 音乐id</span>” 漂白则“
+                  <span style="color: #009688;">漂白音乐 音乐id</span>” 。</p><br/>
+                <p>14.音乐黑名单： “
+                  <span style="color: #009688;">音乐黑名单</span>” 。</p><br/>
+                <p>15.拉黑用户：“
+                  <span style="color: #009688;">拉黑用户 用户id</span>” 漂白则“
+                  <span style="color: #009688;">漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。</p><br/>
+                <p>16.用户黑名单： “
+                  <span style="color: #009688;">用户黑名单</span>” 。</p><br/>
+                <p>17.设置点歌人：“
+                  <span style="color: #009688;">设置点歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
+                  <span style="color: #009688;">取消点歌人 用户id</span>” 。</p><br/>
+                <p>18.设置切歌人：“
+                  <span style="color: #009688;">设置切歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
+                  <span style="color: #009688;">取消切歌人 用户id</span>” 。
+                </p>
+                <br />
+                 </mu-card-text>
+           
+        </mu-drawer>
   </div>
 </template>
 
@@ -853,6 +888,7 @@ export default {
     openSearchGd: false,
     openSearchUser: false,
     openHouse: false,
+    openManual:false,
     searchColumns: [
       { title: "ID", name: "id", width: 40, align: "left" },
       // {title: '操作', name: 'op', align: 'center'},
@@ -893,8 +929,8 @@ export default {
     sourceGd: "wy",
     sourceChat: "wy",
     sourceUser: "wy",
-    house: { name: "", desc: "", password: "", needPwd: false },
-    homeHouse: { name: "", desc: "", password: "", needPwd: false },
+    house: { name: "", desc: "", password: "", needPwd: false,enableStatus:false,retainKey:"" },
+    homeHouse: { name: "", desc: "", password: "", needPwd: false,enableStatus:false,retainKey:""},
     secondUrl: "",
     firstLoaded: 0,
     houses: [],
@@ -903,6 +939,7 @@ export default {
     loading: {},
     houseForward: "",
     visibility: false,
+    favorite: false,
     playingId:"",
     houseId:"",
     housePwd:"123",
@@ -937,7 +974,8 @@ export default {
       houseReachId:'',
       houseReachName:'直达房间',
       homeDesc:'',
-      closeClock:null
+      closeClock:null,
+      announceToast:null
    } ),
   methods: {
     play: function() {
@@ -1004,6 +1042,7 @@ export default {
       socketClient.close();
       this.isPlay = false;
       this.playingId = "";
+      this.getHomeHouses();
 
       this.saveSocket(socketClient, stompClient);
     },
@@ -1013,7 +1052,7 @@ export default {
       stompClient.subscribe("/topic/chat", response => {
         let body = JSON.parse(response.body);
         if (body.code == "20000") {
-          this.$toast.message(body.data);
+          this.$toast.message({message:"系统通知："+body.data,time: 30*1000, closeIcon: 'close',close:true});
         }
         //this.$store.commit("pushChatData", .data);
       });
@@ -1068,13 +1107,17 @@ export default {
             this.settingName(content);
           }
           break;
-        case "公告":
+        case "通知":
           content = sendUtils.parseContent(instruction, chatMessage);
           if (content === "") {
             // console.log('请输入公告', chatMessage)
           } else {
             stompClient.send("/chat/notice/" + content, {}, JSON.stringify({}));
           }
+          break;
+         case "公告":
+          content = sendUtils.parseContent(instruction, chatMessage);       
+          stompClient.send("/chat/announce", {}, JSON.stringify({ content: content}));
           break;
         case "root":
           content = sendUtils.parseContent(instruction, chatMessage);
@@ -1401,9 +1444,21 @@ export default {
                 content: messageContent.message,
                 type: "notice"
               });
-              this.$toast.message(messageContent.message);
+              if(messageContent.message=="点歌成功")
+                this.$toast.message({message:messageContent.message,time:1000});
+              }else{
+                this.$toast.message(messageContent.message);
+              }
+            break;
+          case messageUtils.messageType.ANNOUNCEMENT:
+            if(this.announceToast){
+                  this.$toast.close(this.announceToast);
+                }
+            if(messageContent.data.content){
+                this.announceToast = this.$toast.message({message:"公告："+messageContent.data.content,time: 60*1000, closeIcon: 'close',close:true});
             }
             break;
+
           case messageUtils.messageType.CHAT:
             // parse picture
             let imgList = [];
@@ -1436,7 +1491,7 @@ export default {
             if (messageContent.message == "goodlist") {
               this.$store.commit("setSocketGood", true);
             }
-            this.$store.commit("setPlayerPick", messageContent.data);
+           this.$store.commit("setPlayerPick", messageContent.data);
             if (messageContent.data.length > 1) {
               this.secondUrl = messageContent.data[1].url;
               //console.log("this.firstLoaded"+this.firstLoaded);
@@ -1481,6 +1536,16 @@ export default {
             } else {
               this.$store.commit("setSocketRoot", false);
             }
+            break;
+          case messageUtils.messageType.ENTER_HOUSE_START:
+             if (Number(messageContent.code) === 20000) {
+                this.$store.commit("setPlayerPick", new Array());
+             }
+            break;
+           case messageUtils.messageType.ADD_HOUSE_START:
+             if (Number(messageContent.code) === 20000) {
+                this.$store.commit("setPlayerPick", new Array());
+             }
             break;
           case messageUtils.messageType.ENTER_HOUSE:
             this.loading.close();
@@ -1778,7 +1843,9 @@ export default {
           name: this.house.name,
           desc: this.house.desc,
           needPwd:this.house.needPwd,
-          password:this.house.password
+          password:this.house.password,
+          enableStatus:this.house.enableStatus,
+          retainKey:this.house.retainKey
         })
       );
     },
@@ -1787,7 +1854,10 @@ export default {
        this.$http.post("/house/add",{  name: this.homeHouse.name,
           desc: this.homeHouse.desc,
           needPwd:this.homeHouse.needPwd,
-          password:this.homeHouse.password})
+          password:this.homeHouse.password,
+          enableStatus:this.homeHouse.enableStatus,
+          retainKey:this.homeHouse.retainKey
+          })
         .then(response => {
           this.loading.close();
           if(response.data.code=="20000"){
