@@ -115,7 +115,7 @@
             <mu-col
               :style="
                 screenWidth < 766 && screenWidth !== 0
-                  ? 'margin: 60px 0 0 0;'
+                  ? 'margin: 60px 0 200px 0;'
                   : ''
               "
             >
@@ -988,7 +988,7 @@ export default {
       let socketClient = this.$store.getters.getSocketClient;
       let stompClient = this.$store.getters.getStompClient;
 
-      socketClient =new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); // new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);// 
+      socketClient =new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);// new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); // 
       stompClient = Stomp.over(socketClient);
 
       if (isProduction) {
