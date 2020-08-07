@@ -1015,7 +1015,7 @@ export default {
       let socketClient = this.$store.getters.getSocketClient;
       let stompClient = this.$store.getters.getStompClient;
 
-      socketClient = new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);//new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); ////// 
+      socketClient = new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); ////// new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);/
       stompClient = Stomp.over(socketClient);
 
       if (isProduction) {
