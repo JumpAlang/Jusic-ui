@@ -126,8 +126,15 @@
               </mu-button> 
               </mu-flex>
               <div style="font-size: 16px; font-weight: 400;">
-                在线人数: {{ online }}
-                <span style="float:right;cursor:pointer;color:gray;" @click="clearScr">清屏</span>
+                 <mu-button flat color="white"  @click="houseUser">
+                  <mu-icon left value="supervisor_account"></mu-icon>
+                      {{online}}
+                </mu-button >
+                  <mu-button flat color="white"  @click="clearScr" style="float:right;">
+                  <mu-icon left value="clear_all"></mu-icon>
+                      
+                </mu-button>
+              
               </div>
               <div id="chat-container">
                 <div
@@ -141,7 +148,7 @@
                       (isRoot || isAdmin) && item.type === "chat"
                       ? item.nickName + `[${item.sessionId}]`
                       : item.nickName
-                      }}{{item.sendTime?"  "+new Date(item.sendTime).getHours() +':' + new Date(item.sendTime).getMinutes() + ':' + new Date(item.sendTime).getSeconds():''}}
+                      }}{{item.sendTime?"  "+formatterFullTime(item.sendTime):''}}
                     </small>
                   </div>
                   <div v-if="item.type === 'notice'">
@@ -696,6 +703,8 @@
                     style="cursor: pointer; color: #009688;"
                   >[歌单]</span>提示：歌单页面可以搜索网易歌单、网易用户id的歌单、qq歌单、qq用户id的歌单
                 </p>
+                                <br />
+
                  <p>
                   4.如点错歌曲可以输入 “
                   <span style="color: #009688;">删除音乐 歌名</span>” 即可删除歌曲，管理员可以使用歌曲id删除。
@@ -712,8 +721,17 @@
                   <span style="color: #009688;">设置昵称 名字</span>”
                    可以设置自己的显示昵称，仅限当前客户端有效。
                 </p>
+                                <br />
                 <p>
-                  7.想要斗图？ ┏ (゜ω゜)=☞ “
+                  7.私聊：输入 “
+                  <span style="color: #009688;">@用户id 内容</span>”
+                   可以私聊相应用户，用户id即用户ip后面那一串字母，如ju2etxv2。
+                   不知道用户id,试着点击在线人数图标。
+                </p>
+                                <br />
+
+                <p>
+                  8.想要斗图？ ┏ (゜ω゜)=☞ “
                   <span
                     @click="openManual = !openManual;openPictureSearch = !openPictureSearch"
                     style="cursor: pointer; color: #009688;"
@@ -721,18 +739,20 @@
                 </p>
                 <br/>
                  <p>
-                  8.倒计时退出房间
+                  9.倒计时退出房间
                    输入 “
                   <span style="color: #009688;">倒计时退出 1</span>”
                   则将在1分钟后退出房间。取消倒计时退出：<span style="color: #009688;">取消退出</span>”
                 </p>
                 <br/>
                  <p>
-                  9.如果有什么好的想法、建议或问题可以单项向管理员发送消息，（＾∀＾●）ﾉｼ
+                  10.如果有什么好的想法、建议或问题可以单项向管理员发送消息，（＾∀＾●）ﾉｼ
                   “
                   <span style="color: #009688;">@管理员 内容</span>”,
                   空格隔开哦!
                 </p>
+                                <br />
+
                 <p>另外也可以在项目仓库开个 issue 进行公开讨论</p>
                  </mu-card-text>
            
@@ -759,43 +779,48 @@
                   <span style="color: #009688;">退出点赞模式</span>” 。
                 </p><br/>
                 <p>
-                  5.修改投票切歌率： “
+                  5.随机模式（歌曲列表随机播放）： “
+                  <span style="color: #009688;">随机模式</span>” 退出则“
+                  <span style="color: #009688;">退出随机模式</span>” 。
+                </p><br/>
+                <p>
+                  6.修改投票切歌率： “
                   <span style="color: #009688;">投票切歌率 1</span>” 数值在(0,1]。如：设置成0.5则表示房间人数一半赞同即可切歌。</p><br/>
                 <p>
-                  6.禁止切歌：“
+                  7.禁止切歌：“
                   <span style="color: #009688;">禁止切歌</span>” 启用则“
                   <span style="color: #009688;">启用切歌</span>” 。</p><br/>
                 <p>
-                  7.禁止点歌：“
+                  8.禁止点歌：“
                   <span style="color: #009688;">禁止点歌</span>” 启用则“
                   <span style="color: #009688;">启用点歌</span>” 。</p><br/>
                 <p>
-                  8.清空列表：“
+                  9.清空列表：“
                   <span style="color: #009688;">清空列表</span>” 。
                 </p><br/>
                 <p>
-                  9.清空默认播放列表：“
+                  10.清空默认播放列表：“
                   <span style="color: #009688;">清空默认列表</span>” 。</p><br/>
-                <p> 10.设置默认播放列表：“
-                  <span style="color: #009688;">设置默认列表 24381616,1</span>” 。</p><br/>
-                <p> 11.默认列表歌曲数：“
+                <p> 11.设置默认播放列表（当点歌列表为空时，默认从此加载歌曲）：“
+                  <span style="color: #009688;">设置默认列表 24381616,1</span>” ，其中243881616和1是歌单id</p><br/>
+                <p> 12.默认列表歌曲数：“
                   <span style="color: #009688;">默认列表歌曲数</span>” 。</p><br/>
-                <p>12.置顶音乐： “
+                <p>13.置顶音乐： “
                   <span style="color: #009688;">置顶音乐 音乐id</span>” 音乐id即歌曲列表中歌曲后面那一串字母，如411214279。</p><br/>
-                <p>13.拉黑音乐：“
+                <p>14.拉黑音乐：“
                   <span style="color: #009688;">拉黑音乐 音乐id</span>” 漂白则“
                   <span style="color: #009688;">漂白音乐 音乐id</span>” 。</p><br/>
-                <p>14.音乐黑名单： “
+                <p>15.音乐黑名单： “
                   <span style="color: #009688;">音乐黑名单</span>” 。</p><br/>
-                <p>15.拉黑用户：“
+                <p>16.拉黑用户：“
                   <span style="color: #009688;">拉黑用户 用户id</span>” 漂白则“
                   <span style="color: #009688;">漂白用户 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。</p><br/>
-                <p>16.用户黑名单： “
+                <p>17.用户黑名单： “
                   <span style="color: #009688;">用户黑名单</span>” 。</p><br/>
-                <p>17.设置点歌人：“
+                <p>18.设置点歌人：“
                   <span style="color: #009688;">设置点歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
                   <span style="color: #009688;">取消点歌人 用户id</span>” 。</p><br/>
-                <p>18.设置切歌人：“
+                <p>19.设置切歌人：“
                   <span style="color: #009688;">设置切歌人 用户id</span>” 用户id即用户ip后面那一串字母，如ju2etxv2。取消则“
                   <span style="color: #009688;">取消切歌人 用户id</span>” 。
                 </p>
@@ -975,7 +1000,9 @@ export default {
       houseReachName:'直达房间',
       homeDesc:'',
       closeClock:null,
-      announceToast:null
+      announceToast:null,
+      lastLyric:'',
+      currentLyric:''
    } ),
   methods: {
     play: function() {
@@ -988,7 +1015,7 @@ export default {
       let socketClient = this.$store.getters.getSocketClient;
       let stompClient = this.$store.getters.getStompClient;
 
-      socketClient =new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);// new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); // 
+      socketClient = new SockJS("https://www.alang.run" + "/wss?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType);//new SockJS(baseUrl + "/server?houseId="+this.houseId+"&housePwd="+this.housePwd+"&connectType="+this.connectType); ////// 
       stompClient = Stomp.over(socketClient);
 
       if (isProduction) {
@@ -1255,6 +1282,12 @@ export default {
         case "退出点赞模式":
           stompClient.send("/music/goodmodel/false", {}, "");
           break;
+          case "随机模式":
+          stompClient.send("/music/randommodel/true", {}, "");
+          break;
+        case "退出随机模式":
+          stompClient.send("/music/randommodel/false", {}, "");
+          break;
            case "留存房间":
           stompClient.send("/house/retain/true", {}, "");
           break;
@@ -1433,6 +1466,15 @@ export default {
               this.$store.commit("setSocketOnline", messageContent.data.count);
             }
             break;
+          case messageUtils.messageType.HOUSE_USER:
+            let users = messageContent.data;
+            for(let i = 0; i < users.length; i++){
+               this.$store.commit("pushChatData", {
+                content: (i+1)+"."+users[i].nickName+"["+users[i].sessionId+"]",
+                type: "notice"
+              });
+            }
+            break;
           case messageUtils.messageType.NOTICE:
             if (
               messageContent.message !== undefined &&
@@ -1507,6 +1549,8 @@ export default {
 
             break;
           case messageUtils.messageType.MUSIC:
+            this.lastLyric="";
+            this.$store.commit("setPlayerLyric", "");
             this.firstLoaded = 0;
             this.$store.commit("setPlayerMusic", messageContent.data);
             document.querySelector("#music").preload = "auto";
@@ -1764,6 +1808,10 @@ export default {
       let stompClient = this.$store.getters.getStompClient;
       stompClient.send("/music/skip/vote", {}, {});
     },
+    houseUser: function() {
+      let stompClient = this.$store.getters.getStompClient;
+      stompClient.send("/house/houseuser", {}, {});
+    },
     musicTimeUpdate: function(e) {
       // progress
       let currentTime = e.target.currentTime;
@@ -1782,7 +1830,9 @@ export default {
         this.$store.commit("setPlayerLyric", "暂无歌词");
       } else {
         let number = Number(currentTime.toFixed());
-        if (lyrics[number] !== undefined && lyrics[number] !== "") {
+        if (lyrics[number] !== undefined && lyrics[number] !== "" && lyrics[number] != this.currentLyric) {
+          this.lastLyric = this.currentLyric;
+          this.currentLyric = lyrics[number];
           this.$store.commit("setPlayerLyric", lyrics[number]);
         }
       }
@@ -1797,6 +1847,9 @@ export default {
     },
     formatterTime: function(value) {
       return timeUtils.secondsToHH_mm_ss(value);
+    },
+     formatterFullTime: function(value) {
+      return timeUtils.secondsToYYYY_HH_mm_ss(value);
     },
     nextSong: function(e) {
       this.firstLoaded = 1;

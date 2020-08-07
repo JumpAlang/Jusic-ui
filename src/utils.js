@@ -65,7 +65,8 @@ export let messageUtils = {
         ADD_HOUSE_START:"ADD_HOUSE_START",
         SEARCH_SONGLIST:"SEARCH_SONGLIST",
         SEARCH_USER:"SEARCH_USER",
-        ANNOUNCEMENT:"ANNOUNCEMENT"
+        ANNOUNCEMENT:"ANNOUNCEMENT",
+        HOUSE_USER:"HOUSE_USER"
 
     },
     isKnowMessageType: {},
@@ -121,7 +122,8 @@ messageUtils.parseMessageContent = function (source) {
  */
 export let timeUtils = {
     secondsToHH_mm_ss: {},
-    secondsToHH_mm_ss_cs: {}
+    secondsToHH_mm_ss_cs: {},
+    secondsToYYYY_HH_mm_ss:{}
 };
 
 /**
@@ -153,6 +155,12 @@ timeUtils.secondsToHH_mm_ss = function (seconds) {
         timeStr = `${stringFormat(hourTime)}:${stringFormat(minuteTime)}:${stringFormat(secondTime)}`
     }
     return timeStr;
+};
+
+timeUtils.secondsToYYYY_HH_mm_ss = function (seconds) {
+    let date = new Date(seconds);
+    return date.getHours() +':' + date.getMinutes() + ':' + date.getSeconds();
+    
 };
 
 /**
