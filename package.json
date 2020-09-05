@@ -22,7 +22,7 @@
     "@vue/cli-service": "^4.1.0",
     "muse-ui": "^3.0.2",
     "muse-ui-progress": "^0.1.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "sass-loader": "^8.0.0",
     "sockjs-client": "^1.4.0",
     "stompjs": "^2.3.3",
