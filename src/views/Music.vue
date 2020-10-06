@@ -1043,6 +1043,9 @@ export default {
                 content: "网络异常, 请尝试重新连接服务器!"
               });
               _this.$toast.error("网络异常, 请尝试重新连接服务器!");
+              setTimeout(function(){
+                  _this.connect();
+              },444);
             }
             afterOnclose(e);
           };
@@ -1072,6 +1075,7 @@ export default {
       this.getHomeHouses();
 
       this.saveSocket(socketClient, stompClient);
+     
     },
     subscribe: function() {
       let stompClient = this.$store.getters.getStompClient;

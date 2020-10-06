@@ -35,7 +35,7 @@ sendUtils.parseContent = function (instruction, message) {
     }
     let replace = message.replace(instruction, '');
     return replace.length > 0
-        ? replace.replace('点歌', '').replace(/(^\s*)/g, '') : '';
+        ? replace.replace(/(^\s*)/g, '') : '';
 };
 
 /**
