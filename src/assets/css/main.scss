@@ -113,6 +113,10 @@ body, table, tr, td, th {
   background-color: #009688; /*滚动条的背景颜色*/
 }
 
+.mu-bottom-sheet{
+  background-color: #263238 !important;
+  opacity: 0.9;
+}
 .mu-dialog {
   background-color: #263238 !important;
   opacity: 0.9;
@@ -255,7 +259,12 @@ body, table, tr, td, th {
   max-width: 100%;
   max-height:100%;
 }
-
+#sheet .mu-item-title{
+  color:white;
+}
+#sheet .mu-sub-header{
+  color:gray;
+}
 #share .mu-card-title-container .mu-card-sub-title{
   font-size: 12px !important;
   word-wrap:break-word;
