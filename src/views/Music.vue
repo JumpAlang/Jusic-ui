@@ -80,13 +80,21 @@
                 :data="pick"
               >
                 <template slot-scope="scope">
-                  <td class="is-left">{{ scope.$index + 1 }}</td>
                   <td class="is-left">
-                    <a
-                      class="search_pick_btn"
-                      @click="goodMusic(scope.row)"
-                      v-if="scope.$index != 0 && good"
-                    >点赞</a>
+                     <a @click="removeCollect(scope.row)" v-if="favoriteMap[scope.row.id] != null && favoriteMap[scope.row.id] != undefined">
+                      <mu-icon value="favorite" size="20" color="red"></mu-icon>
+                    </a>   
+                     <a @click="collectMusic(scope.row)" v-else>
+                      <mu-icon value="favorite" size="20" color="white"></mu-icon>
+                    </a>   
+                    {{ scope.$index + 1 }} 
+                  
+                  </td>
+                  <td class="is-left">       
+                   <a @click="goodMusic(scope.row)"
+                      v-if="scope.$index != 0 && good">
+                    <mu-icon value="thumb_up" size="20" color="teal"></mu-icon>
+                  </a>
                     {{
                     isRoot || isAdmin
                     ? scope.row.name + `[${scope.row.id}]`
@@ -190,18 +198,25 @@
                   </mu-button>               
              </div>
 
+                  <mu-flex class="flex-wrapper" align-items="center">
+
                 <mu-button
                   v-if="!isContented"
                   @click="connect"
                   color="primary"
-                  style="width: 100%"
+                  style="width: 78%"
                 >连接服务器</mu-button>
                 <mu-button
                   v-if="isContented"
                   @click="sendHandler"
                   color="primary"
-                  style="width: 100%"
+                  style="width: 78%"
                 >发送消息</mu-button>
+                  <mu-button color="primary" style="width: 20%" @click="openBotttomSheet">
+                    <mu-icon value="favorite" color="red"></mu-icon>
+                </mu-button>
+       </mu-flex>
+              
                   <div style="padding-top: 10px;">
                
                   <mu-chip style="margin-right:10px;"
@@ -828,6 +843,30 @@
                  </mu-card-text>
            
         </mu-drawer>
+
+        <mu-bottom-sheet id="sheet" :open.sync="open" style="height:400px;overflow:scroll;">
+    <mu-list>
+      <mu-sub-header>
+          我的收藏 <mu-button flat color="primary" @click="playAll">
+              全部播放
+            </mu-button>
+            <mu-button flat color="primary" @click="removeAllCollect">
+              取消所有收藏
+            </mu-button>
+      </mu-sub-header>
+  
+      <mu-list-item v-for="(value,name,index) in favoriteMap">
+       
+        <mu-list-item-title>{{index+1}}.{{value.name}}|{{value.artist}}</mu-list-item-title>
+         <mu-list-item-action @click="removeCollect(value)">
+          <mu-icon value="favorite" color="red"></mu-icon>
+        </mu-list-item-action>
+         <mu-list-item-action @click="pickMusic(value)">
+          <mu-icon value="play_arrow" color="teal"></mu-icon>
+        </mu-list-item-action>
+      </mu-list-item>
+    </mu-list>
+  </mu-bottom-sheet>
   </div>
 </template>
 
@@ -899,7 +938,7 @@ export default {
   data: () => ({
     isPlay: false,
     columns: [
-      { title: "ID", name: "id", width: 80, align: "left" },
+      { title: "ID", name: "id", width: 88, align: "left" },
       { title: "歌曲", name: "name", width: 200, align: "left" },
       { title: "歌手", name: "calories", align: "center" },
       { title: "专辑", name: "fat", align: "center" },
@@ -1002,7 +1041,9 @@ export default {
       closeClock:null,
       announceToast:null,
       lastLyric:'',
-      currentLyric:''
+      currentLyric:'',
+      favoriteMap:{},
+      open:false
    } ),
   methods: {
     play: function() {
@@ -1044,7 +1085,9 @@ export default {
               });
               _this.$toast.error("网络异常, 请尝试重新连接服务器!");
               setTimeout(function(){
+                if(!_this.$store.getters.getIsConnected){
                   _this.connect();
+                }
               },444);
             }
             afterOnclose(e);
@@ -1779,9 +1822,22 @@ export default {
           source: this.source,
           sendTime: Date.now()
         })
-      );
-      this.$toast.message(`[${row.id}]${row.name} - 已发送点歌请求`);
+      );      this.$toast.message(`[${row.id}]${row.name} - 已发送点歌请求`);
     },
+     pickMusicNoToast: function(row) {
+      let stompClient = this.$store.getters.getStompClient;
+      stompClient.send(
+        "/music/pick",
+        {},
+        JSON.stringify({
+          name: row.name,
+          id: row.id,
+          source: row.source,
+          sendTime: Date.now()
+        })
+      );
+    },
+
     showPickButton(value) {
       if (Number(value.st) < 0) {
         // 没有资源
@@ -2105,6 +2161,41 @@ export default {
        this.source = "wy";
        this.current = 1;
        this.search();
+    },
+    collectMusic(row){
+      this.$set(this.favoriteMap, row.id, row)
+
+      // this.favoriteMap[row.id]= row;
+      localStorage.setItem("collectMusic",JSON.stringify(this.favoriteMap));
+    },
+    removeCollect(row){
+      this.$delete(this.favoriteMap,row.id);
+      // delete this.favoriteMap[row.id];
+      localStorage.setItem("collectMusic",JSON.stringify(this.favoriteMap));
+    },
+    containCollect(id){
+      let result = this.favoriteMap[id] != null;
+      console.log("aaa",result);
+      return result;
+    },
+     closeBottomSheet () {
+      this.open = false;
+    },
+    openBotttomSheet () {
+      this.open = true;
+    },
+    removeAllCollect(){
+      localStorage.removeItem("collectMusic");
+      this.favoriteMap = {};
+      this.open = false;
+    },
+    playAll(){
+      let i = 1;
+      let _this = this;
+      for(let key in this.favoriteMap){
+        _this.pickMusicNoToast(_this.favoriteMap[key]);
+      }
+      this.open = false;
     }
   },
   watch: {
@@ -2268,6 +2359,7 @@ export default {
     }
   },
   mounted() {
+    
     this.getScreenWidth();
      this.$nextTick(function () {
       this.$http.defaults.baseURL = baseUrl;
@@ -2308,6 +2400,12 @@ export default {
             signature: '',
             jsApiList: []
         });
+    let collect =localStorage.getItem("collectMusic");
+    if(collect && collect != undefined){
+      this.favoriteMap = JSON.parse(collect);
+      console.log("收",this.favoriteMap);
+    }
+        // localStorage.removeItem("collectMusic");
   },
   created() {
     // let val = this.albumRotateSize;
