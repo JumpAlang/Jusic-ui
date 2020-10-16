@@ -204,13 +204,13 @@
                   v-if="!isContented"
                   @click="connect"
                   color="primary"
-                  style="width: 78%"
+                  style="width: 77%"
                 >连接服务器</mu-button>
                 <mu-button
                   v-if="isContented"
                   @click="sendHandler"
                   color="primary"
-                  style="width: 78%"
+                  style="width: 77%"
                 >发送消息</mu-button>
                   <mu-button color="primary" style="width: 20%" @click="openBotttomSheet">
                     <mu-icon value="favorite" color="red"></mu-icon>
@@ -844,7 +844,7 @@
            
         </mu-drawer>
 
-        <mu-bottom-sheet id="sheet" :open.sync="open" style="height:400px;overflow:scroll;">
+        <mu-bottom-sheet id="sheet" :open.sync="open" style="max-height:380px;overflow:auto;">
     <mu-list>
       <mu-sub-header>
           我的收藏 <mu-button flat color="primary" @click="playAll">
@@ -856,14 +856,14 @@
       </mu-sub-header>
   
       <mu-list-item v-for="(value,name,index) in favoriteMap">
-       
-        <mu-list-item-title>{{index+1}}.{{value.name}}|{{value.artist}}</mu-list-item-title>
-         <mu-list-item-action @click="removeCollect(value)">
+       <mu-list-item-action @click="removeCollect(value)" style="width:10%;">
           <mu-icon value="favorite" color="red"></mu-icon>
         </mu-list-item-action>
-         <mu-list-item-action @click="pickMusicNoToast(value)">
+         <mu-list-item-action @click="pickMusicNoToast(value)"  style="width:10%;">
           <mu-icon value="play_arrow" color="teal"></mu-icon>
         </mu-list-item-action>
+        <mu-list-item-title  style="width:80%;">{{index+1}}.{{value.name}}|{{value.artist}}|{{value.album.name}}</mu-list-item-title>
+         
       </mu-list-item>
     </mu-list>
   </mu-bottom-sheet>
