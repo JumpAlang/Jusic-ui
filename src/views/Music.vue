@@ -204,18 +204,19 @@
                   v-if="!isContented"
                   @click="connect"
                   color="primary"
-                  style="width: 77%"
+                  style="width: 90%"
                 >连接服务器</mu-button>
                 <mu-button
                   v-if="isContented"
                   @click="sendHandler"
                   color="primary"
-                  style="width: 77%"
+                  style="width: 90%"
                 >发送消息</mu-button>
-                  <mu-button color="primary" style="width: 20%" @click="openBotttomSheet">
+                <mu-button icon @click="openBotttomSheet" >
                     <mu-icon value="favorite" color="red"></mu-icon>
                 </mu-button>
-       </mu-flex>
+                
+                </mu-flex>
               
                   <div style="padding-top: 10px;">
                
