@@ -861,7 +861,7 @@
          <mu-list-item-action @click="removeCollect(value)">
           <mu-icon value="favorite" color="red"></mu-icon>
         </mu-list-item-action>
-         <mu-list-item-action @click="pickMusic(value)">
+         <mu-list-item-action @click="pickMusicNoToast(value)">
           <mu-icon value="play_arrow" color="teal"></mu-icon>
         </mu-list-item-action>
       </mu-list-item>
