@@ -617,14 +617,21 @@
        <mu-appbar color="primary" title="分享">
         <mu-button slot="right" flat @click="openShare = !openShare">X</mu-button>
       </mu-appbar>
-        <mu-flex class="flex-wrapper" justify-content="center">
+       
+    <mu-flex class="flex-wrapper" justify-content="center">
           <mu-card style="max-width: 375px;margin-top: 20px;"  align="center">
           <mu-card-header :title="musichouse" :sub-title="homeDesc?(homeDesc):'做一个自带背景音乐的人'" align="left">
           <mu-avatar slot="avatar" size="50">
               <img src="../assets/images/logo.png">
           </mu-avatar>
           </mu-card-header>
-          <mu-card-media>
+          <mu-card-media style="width:250px">
+          <img :src="miniQrcode"/>
+        </mu-card-media>
+        <mu-card-title sub-title="微信扫码穿梭到小程序"></mu-card-title>
+        		 <!-- <mu-divider></mu-divider> -->
+
+          <mu-card-media style="margin-top:10px;">
           <qrcode-vue
 	          id="qrcodeBox"
             level="H"
@@ -1044,7 +1051,8 @@ export default {
       lastLyric:'',
       currentLyric:'',
       favoriteMap:{},
-      open:false
+      open:false,
+      miniQrcode:''
    } ),
   methods: {
     play: function() {
@@ -2130,6 +2138,21 @@ export default {
       let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd;
       this.qrcodeVue.value = "http://music.alang.run?"+encodeURIComponent(queryString);	// 二维码内容
     },
+     getMiniCode() {
+       this.$http.post("/house/getMiniCode",{  id: this.houseId})
+        .then(response => {
+          if(response.data.code=="20000"){
+            this.miniQrcode = "data:image/jpeg;base64,"+response.data.data;
+          }else{
+            this.$toast.message(response.data.message);
+          }
+         
+        })
+        .catch(error => {
+        })
+      let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd;
+      this.qrcodeVue.value = "http://music.alang.run?"+encodeURIComponent(queryString);	// 二维码内容
+    },
     reachHouse(){
       let housePwd = this.getUrlKey("housePwd");
       this.homeHouseEnter(this.houseReachId,this.houseReachName,housePwd);
@@ -2243,6 +2266,7 @@ export default {
      openShare: function(newOpenHouse, oldOpenHouse) {
       if (newOpenHouse) {
         this.getQRcode();
+        this.getMiniCode();
       }
     },
     "$store.state.player.music": function(newValue, oldValue) {
