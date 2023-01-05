@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
-    "@vue/cli-service": "^4.1.0",
+    "@vue/cli-service": "^5.0.8",
     "muse-ui": "^3.0.2",
     "muse-ui-progress": "^0.1.0",
     "node-sass": "^4.12.0",
