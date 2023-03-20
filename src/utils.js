@@ -66,7 +66,8 @@ export let messageUtils = {
         SEARCH_SONGLIST:"SEARCH_SONGLIST",
         SEARCH_USER:"SEARCH_USER",
         ANNOUNCEMENT:"ANNOUNCEMENT",
-        HOUSE_USER:"HOUSE_USER"
+        HOUSE_USER:"HOUSE_USER",
+        CIRCLEMODEL:'CIRCLEMODEL',
 
     },
     isKnowMessageType: {},

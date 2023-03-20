@@ -14,7 +14,8 @@ export default new Vuex.Store({
             userName: localStorage.getItem("USER_NAME") ? localStorage.getItem("USER_NAME") : null,
             isRoot: false,
             isAdmin: false,
-			good:false
+			good:false,
+            circle:false
         },
         player: {
             pick: [],
@@ -87,6 +88,9 @@ export default new Vuex.Store({
         },
 		isSocketGood:state =>{
 			return Boolean(state.socket.good)
+		},
+        isSocketCircle:state =>{
+			return Boolean(state.socket.circle)
 		},
         getPlayerMusic: state => {
             return state.player.music;
@@ -183,6 +187,9 @@ export default new Vuex.Store({
         },
 		setSocketGood: (state, value) => {
             state.socket.good = Boolean(value)
+        },
+        setSocketCircle: (state, value) => {
+            state.socket.circle = Boolean(value)
         },
         setPlayerMusic: (state, value) => {
             state.player.music = value;

@@ -848,6 +848,11 @@
                   <span style="color: #009688;">取消切歌人 用户id</span>” 。
                 </p>
                 <br />
+                 <p>
+                  20.单曲循环： “
+                  <span style="color: #009688;">单曲循环</span>” 退出则“
+                  <span style="color: #009688;">退出单曲循环</span>” 。
+                </p><br/>
                  </mu-card-text>
            
         </mu-drawer>
@@ -919,6 +924,7 @@ export default {
       isRoot: "isSocketRoot",
       isAdmin: "isSocketAdmin",
       good: "isSocketGood",
+      circle: "isSocketCircle",
       searchKeyword: "getSearchKeyword",
       searchKeywordGd: "getSearchKeywordGd",
       searchKeywordUser: "getSearchKeywordUser",
@@ -1338,6 +1344,12 @@ export default {
         case "退出点赞模式":
           stompClient.send("/music/goodmodel/false", {}, "");
           break;
+        case "单曲循环":
+          stompClient.send("/music/musiccirclemodel/true", {}, "");
+          break;
+        case "退出单曲循环":
+          stompClient.send("/music/musiccirclemodel/false", {}, "");
+          break;
           case "随机模式":
           stompClient.send("/music/randommodel/true", {}, "");
           break;
@@ -1608,6 +1620,7 @@ export default {
             this.lastLyric="";
             this.$store.commit("setPlayerLyric", "");
             this.firstLoaded = 0;
+            messageContent.data.url = messageContent.data.url +"?timestamp="+Date.now();
             this.$store.commit("setPlayerMusic", messageContent.data);
             document.querySelector("#music").preload = "auto";
             if (
@@ -2242,11 +2255,12 @@ export default {
     },
     playingId:function(newValue,oldValue){
       let _this = this;
+      console.log("新等于旧");
       if(newValue !="" && newValue != oldValue){
         this.albumRotate = false;
         document.querySelector("#music").volume =
         Number(this.$store.getters.getPlayerVolume) / 100;
-
+        console.log("新不等于旧");
       setTimeout(function() {
         _this.albumRotate = true;
         let pushTime = _this.$store.getters.getPlayerMusic.pushTime;
