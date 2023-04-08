@@ -860,11 +860,18 @@
         <mu-bottom-sheet id="sheet" :open.sync="open" style="max-height:380px;overflow:auto;">
     <mu-list>
       <mu-sub-header>
-          我的收藏 <mu-button flat color="primary" @click="playAll">
+        <mu-button flat color="primary" @click="playAll">
               全部播放
+            </mu-button>           
+            <mu-button flat color="primary" @click="exportCollect">
+              导出
             </mu-button>
+            <mu-button flat color="primary" @click="importCollect">
+              导入
+            </mu-button>
+             <input ref="fileInput" type="file" accept="application/json" style="display: none" @change="handleFileInputChange">
             <mu-button flat color="primary" @click="removeAllCollect">
-              取消所有收藏
+              取消收藏
             </mu-button>
       </mu-sub-header>
   
@@ -2225,6 +2232,37 @@ export default {
       localStorage.removeItem("collectMusic");
       this.favoriteMap = {};
       this.open = false;
+    },
+    exportCollect(){
+      const dataStr = JSON.stringify(this.favoriteMap, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+      const exportFileDefaultName = 'music_'+timeUtils.secondsToYYYY_MM_dd_HH_mm_ss()+'.json';
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    },
+    importCollect(){
+       this.$refs.fileInput.click();
+    },
+    handleFileInputChange(event) {
+      const files = event.target.files;
+      if (files.length === 0) return;
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          for(let key in data){
+            this.$set(this.favoriteMap, key, data[key])
+          }
+          localStorage.setItem("collectMusic",JSON.stringify(this.favoriteMap));
+          // 处理导入的JSON数据
+        } catch (error) {
+          console.error('JSON文件格式错误：', error);
+        }
+      };
+      reader.readAsText(file);
     },
     playAll(){
       let i = 1;

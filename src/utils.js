@@ -124,7 +124,8 @@ messageUtils.parseMessageContent = function (source) {
 export let timeUtils = {
     secondsToHH_mm_ss: {},
     secondsToHH_mm_ss_cs: {},
-    secondsToYYYY_HH_mm_ss:{}
+    secondsToYYYY_HH_mm_ss:{},
+    secondsToYYYY_MM_dd_HH_mm_ss:{}
 };
 
 /**
@@ -162,6 +163,17 @@ timeUtils.secondsToYYYY_HH_mm_ss = function (seconds) {
     let date = new Date(seconds);
     return date.getHours() +':' + date.getMinutes() + ':' + date.getSeconds();
     
+};
+
+timeUtils.secondsToYYYY_MM_dd_HH_mm_ss = function(){
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${year}-${month}-${day}_${hours}:${minutes}:${seconds}`
 };
 
 /**
