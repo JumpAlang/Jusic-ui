@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --mode development",
-    "test": "vue-cli-service serve --mode test",
-    "build": "vue-cli-service build --mode production"
+    "serve": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
+    "test": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve --mode test",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build --mode production"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "brotli": "^1.3.3",
     "classlist-polyfill": "^1.2.0",
     "core-js": "^3.4.3",
     "muse-ui-loading": "^0.2.0",
@@ -21,19 +22,20 @@
     "vue-resource": "^1.5.1",
     "vue-router": "^3.1.3",
     "vuex": "^3.1.2",
-    "weixin-js-sdk": "^1.6.0"
+    "weixin-js-sdk": "^1.6.0",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
     "muse-ui": "^3.0.2",
     "muse-ui-progress": "^0.1.0",
-    "node-sass": "^4.12.0",
-    "sass-loader": "^8.0.0",
+    "qrcode.vue": "^1.7.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
     "sockjs-client": "^1.4.0",
     "stompjs": "^2.3.3",
     "vue-template-compiler": "^2.6.10",
-    "weixin-js-sdk": "^1.6.0",
-    "qrcode.vue": "^1.7.0"
+    "weixin-js-sdk": "^1.6.0"
   }
 }

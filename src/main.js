@@ -22,7 +22,7 @@ Vue.prototype.$http = axios
 
 axios.interceptors.request.use(config => {
   //console.log('请求发送前拦截')
-  config.headers.common['AccessToken'] = 'token'
+  config.headers.common['AccessToken'] = 'token';
   return config;
 }, error => {
   return Promise.reject(error)

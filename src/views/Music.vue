@@ -72,6 +72,7 @@
               </mu-row>
             </mu-col>
             <mu-col span="12">
+              
               <mu-data-table
                 style="background-color: transparent;max-height:380px;overflow:auto;"
                 :selectable="false"
@@ -193,8 +194,8 @@
                 <div style="color:white;" >
                   <mu-radio :value="'wy'" v-model="sourceChat" color="primary" :label="'网易'" class="searchSource"></mu-radio>
                   <mu-radio :value="'qq'" v-model="sourceChat" color="primary" :label="'QQ'" class="searchSource"></mu-radio>
-                  <mu-radio :value="'mg'" v-model="sourceChat" color="primary" :label="'咪咕'" class="searchSource"></mu-radio>
-                  <mu-button flat color="primary" @click="openManual = !openManual"><mu-icon left value="assignment"></mu-icon>教程
+                  
+                   <mu-button flat color="primary" @click="openManual = !openManual"><mu-icon left value="assignment"></mu-icon>教程及直播
                   </mu-button>               
              </div>
 
@@ -350,13 +351,7 @@
               :label="'QQ'"
               class="searchradio"
             ></mu-radio>
-            <mu-radio
-              :value="'mg'"
-              v-model="source"
-              color="primary"
-              :label="'咪咕'"
-              class="searchradio"
-            ></mu-radio>
+           
             <mu-radio
               :value="'lz'"
               v-model="source"
@@ -364,6 +359,11 @@
               :label="'禁歌'"
               class="searchradio"
             ></mu-radio>
+            <a  @click="playCurrentPage">
+                <mu-avatar size="23" slot="avatar" style="margin-left:3px;">
+                    <img src="../assets/images/play.png" title="播放当前页所有歌曲"/>
+                  </mu-avatar>
+                </a>
           </mu-col>
           <mu-col span="1">
             <mu-button class="search_btn" icon @click="search">
@@ -707,6 +707,9 @@
                   声明：本网站仅供学习交流。
                 </mu-card-text>
             </mu-card>
+            <mu-card>
+                <BiliLive :playingId="playingId"/>
+            </mu-card>
             <mu-card-title title="用户"  sub-title="以下命令在聊天框输入"></mu-card-title>
             <mu-card-text>
                 <p>1.输入 “点歌   歌名” 即可点歌。例如：点歌 春夏秋冬，支持输入网易云音乐 ID 点歌。</p>
@@ -898,6 +901,8 @@ import { sendUtils, messageUtils, timeUtils, musicUtils } from "../utils";
 import { baseUrl, isProduction } from "../config/environment";
 import Navigation from "../components/Navigation";
 import ChatSearchPicture from "../components/ChatSearchPicture";
+import BiliLive from "../components/BiliLive";
+
 import wx from 'weixin-js-sdk';
 import QrcodeVue from "qrcode.vue";
 export default {
@@ -905,7 +910,8 @@ export default {
   components: {
     Navigation,
     ChatSearchPicture,
-    QrcodeVue
+    QrcodeVue,
+    BiliLive
   },
   filters: {
     ellipsis (value) {
@@ -2271,6 +2277,12 @@ export default {
         _this.pickMusicNoToast(_this.favoriteMap[key]);
       }
       this.open = false;
+    },
+    playCurrentPage(){
+      for(let i = 0; i < this.searchData.length; i++){
+        this.searchData[i].source = this.source;
+        this.pickMusicNoToast(this.searchData[i]);
+      }
     }
   },
   watch: {
