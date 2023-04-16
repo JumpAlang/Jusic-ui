@@ -68,6 +68,7 @@ export let messageUtils = {
         ANNOUNCEMENT:"ANNOUNCEMENT",
         HOUSE_USER:"HOUSE_USER",
         CIRCLEMODEL:'CIRCLEMODEL',
+        LISTMODEL:'LISTMODEL',
 
     },
     isKnowMessageType: {},

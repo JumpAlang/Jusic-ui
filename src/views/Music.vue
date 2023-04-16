@@ -855,6 +855,12 @@
                   20.单曲循环： “
                   <span style="color: #009688;">单曲循环</span>” 退出则“
                   <span style="color: #009688;">退出单曲循环</span>” 。
+                </p>
+                 <br />
+                 <p>
+                  21.列表循环： “
+                  <span style="color: #009688;">列表循环</span>” 退出则“
+                  <span style="color: #009688;">退出列表循环</span>” 。
                 </p><br/>
                  </mu-card-text>
            
@@ -1359,11 +1365,17 @@ export default {
           break;
         case "单曲循环":
           stompClient.send("/music/musiccirclemodel/true", {}, "");
-          break;
+        break;
+          case "列表循环":
+          stompClient.send("/music/musiclistmodel/true", {}, "");
+        break;
         case "退出单曲循环":
           stompClient.send("/music/musiccirclemodel/false", {}, "");
           break;
-          case "随机模式":
+        case "退出列表循环":
+          stompClient.send("/music/musiclistmodel/false", {}, "");
+          break;
+        case "随机模式":
           stompClient.send("/music/randommodel/true", {}, "");
           break;
         case "退出随机模式":
