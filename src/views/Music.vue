@@ -251,7 +251,7 @@
           @canplay="setCurrentTime"
           style="display: none"
         ></audio>
-        <audio id="music2" :src="music2.url" style="display: none"></audio>
+        <!-- <audio id="music2" :src="music2.url" style="display: none"></audio> -->
       </div>
     </div>
     <div id="play" v-if="!isPlay" :style="backgroundDiv" >
@@ -1645,7 +1645,7 @@ export default {
             this.lastLyric="";
             this.$store.commit("setPlayerLyric", "");
             this.firstLoaded = 0;
-            messageContent.data.url = messageContent.data.url +"?timestamp="+Date.now();
+            messageContent.data.url = messageContent.data.url+"?timestamp="+Date.now();
             this.$store.commit("setPlayerMusic", messageContent.data);
             document.querySelector("#music").preload = "auto";
             if (
@@ -2317,19 +2317,23 @@ export default {
     },
     playingId:function(newValue,oldValue){
       let _this = this;
-      console.log("新等于旧");
+      // console.log("新等于旧");
       if(newValue !="" && newValue != oldValue){
         this.albumRotate = false;
         document.querySelector("#music").volume =
         Number(this.$store.getters.getPlayerVolume) / 100;
-        console.log("新不等于旧");
+        // console.log("新不等于旧");
       setTimeout(function() {
         _this.albumRotate = true;
         let pushTime = _this.$store.getters.getPlayerMusic.pushTime;
         if (pushTime) {
-          document.querySelector("#music").currentTime =
+          // console.log("currenttime:",document.querySelector("#music").currentTime);
+          if((Date.now() - pushTime) / 1000 - document.querySelector("#music").currentTime > 1){
+             document.querySelector("#music").currentTime =
             (Date.now() - pushTime) / 1000;
+          }
              _this.createTouchstartEventAndDispatch(document);
+         
         }
       }, 1000);
       }
