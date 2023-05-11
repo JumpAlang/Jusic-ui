@@ -51,8 +51,8 @@
                   </div>
 
                   <div
-                    style="font-size: 14px; font-weight: 400; margin: 50px 0 10px 0; min-height: 21px;"
-                  >{{ lyric }}</div>
+                    style="dfont-size: 14px; font-weight: 400; margin: 50px 0 10px 0; min-height: 21px;"
+                  ><span style="color:orange;cursor: pointer" v-if="openLyrics" @click="openLyrics=!openLyrics">  ↑↑↑  </span><span style="color:#009688;cursor: pointer" @click="openLyrics=!openLyrics" v-else>  ↓↓↓  </span>{{ lyric }}</div>
                   <small id="musicEndTime" style="float: right">
                     {{
                     playerTime
@@ -71,8 +71,11 @@
                 </mu-col>
               </mu-row>
             </mu-col>
+           
             <mu-col span="12">
-              
+               <div style="margin-bottom:10px;height:250px" v-if="openLyrics">
+                    <Lyrics :lyrics="lyrics" :currentTime="currentTime"/>
+            </div>
               <mu-data-table
                 style="background-color: transparent;max-height:380px;overflow:auto;"
                 :selectable="false"
@@ -271,9 +274,9 @@
       <mu-flex  v-for="house, index in homeHouses" :key="house.id" @click="enterHomeHouse(house.id,house.name,house.needPwd)">
           <mu-tooltip  :content="house.desc">
 
-           <mu-badge :content="house.population?house.population+'':'0'" circle color="info"  style="margin:8px 7px;" class="demo-icon-badge">
-            <mu-chip class="demo-chip" color="teal">
-              <mu-avatar :size="32" color="blue300">
+           <mu-badge :content="house.population?house.population+'':'0'" circle :color="house.population>0?'info':''"  style="margin:8px 7px;" class="demo-icon-badge">
+            <mu-chip class="demo-chip" color="teal" >
+              <mu-avatar :size="32" :color="house.needPwd?'blue300':'green'">
                 <mu-icon :value="house.needPwd?'lock':'lock_open'"></mu-icon>
               </mu-avatar>
               {{house.name}}
@@ -681,9 +684,9 @@
           :key="houseItem.id"
           @click="enterHouse(houseItem.id,houseItem.name,houseItem.needPwd)" >
            <mu-tooltip :content="houseItem.desc">
-            <mu-badge :content="houseItem.population?houseItem.population+'':'0'" circle color="info"  style="margin:8px 7px;" class="demo-icon-badge">
+            <mu-badge :content="houseItem.population?houseItem.population+'':'0'" circle :color="houseItem.population>0?'info':''"   style="margin:8px 7px;" class="demo-icon-badge">
             <mu-chip class="demo-chip" color="teal">
-              <mu-avatar :size="32" color="blue300">
+              <mu-avatar :size="32" :color="houseItem.needPwd?'blue300':'green'">
                 <mu-icon :value="houseItem.needPwd?'lock':'lock_open'"></mu-icon>
               </mu-avatar>
               {{houseItem.name}}
@@ -908,6 +911,7 @@ import { baseUrl, isProduction } from "../config/environment";
 import Navigation from "../components/Navigation";
 import ChatSearchPicture from "../components/ChatSearchPicture";
 import BiliLive from "../components/BiliLive";
+import Lyrics from "../components/Lyrics";
 
 import wx from 'weixin-js-sdk';
 import QrcodeVue from "qrcode.vue";
@@ -917,7 +921,8 @@ export default {
     Navigation,
     ChatSearchPicture,
     QrcodeVue,
-    BiliLive
+    BiliLive,
+    Lyrics
   },
   filters: {
     ellipsis (value) {
@@ -1077,7 +1082,10 @@ export default {
       currentLyric:'',
       favoriteMap:{},
       open:false,
-      miniQrcode:''
+      miniQrcode:'',
+      currentTime:0,
+      lyrics:{},
+      openLyrics:false
    } ),
   methods: {
     play: function() {
@@ -1656,9 +1664,10 @@ export default {
             ) {
               this.$store.commit("setPlayerLyrics", []);
             } else {
+              this.lyrics = musicUtils.parseLyric(messageContent.data.lyric);
               this.$store.commit(
                 "setPlayerLyrics",
-                musicUtils.parseLyric(messageContent.data.lyric)
+                this.lyrics
               );
             }
             document.title = messageContent.data.name;
@@ -1758,7 +1767,7 @@ export default {
             this.$store.commit("setSearchDataUser", messageContent.data.data);
             break;
           case messageUtils.messageType.SEARCH_HOUSE:
-            this.houses = messageContent.data;
+            this.houses = this.sortByPopulation(messageContent.data);
             break;
           case messageUtils.messageType.SEARCH_PICTURE:
             this.$store.commit(
@@ -1921,26 +1930,26 @@ export default {
     },
     musicTimeUpdate: function(e) {
       // progress
-      let currentTime = e.target.currentTime;
+      this.currentTime = e.target.currentTime;
       let duration = e.target.duration;
-      this.$store.commit("setPlayerProgress", (currentTime / duration) * 100);
+      this.$store.commit("setPlayerProgress", (this.currentTime / duration) * 100);
 
       // show time
-      let usedTimeHH_mm_ss = timeUtils.secondsToHH_mm_ss(currentTime);
+      let usedTimeHH_mm_ss = timeUtils.secondsToHH_mm_ss(this.currentTime);
       let durationHH_mm_ss = timeUtils.secondsToHH_mm_ss(duration);
       let time = usedTimeHH_mm_ss + " / " + durationHH_mm_ss;
       this.$store.commit("setPlayerTime", time);
 
       // lyric
-      let lyrics = this.$store.getters.getPlayerLyrics;
-      if (lyrics.length === 0) {
+      this.lyrics = this.$store.getters.getPlayerLyrics;
+      if (this.lyrics.length === 0) {
         this.$store.commit("setPlayerLyric", "暂无歌词");
       } else {
-        let number = Number(currentTime.toFixed());
-        if (lyrics[number] !== undefined && lyrics[number] !== "" && lyrics[number] != this.currentLyric) {
+        let number = Number(this.currentTime.toFixed());
+        if (this.lyrics[number] !== undefined && this.lyrics[number] !== "" && this.lyrics[number] != this.currentLyric) {
           this.lastLyric = this.currentLyric;
-          this.currentLyric = lyrics[number];
-          this.$store.commit("setPlayerLyric", lyrics[number]);
+          this.currentLyric = this.lyrics[number];
+          this.$store.commit("setPlayerLyric", this.lyrics[number]);
         }
       }
     },
@@ -2124,11 +2133,50 @@ export default {
       let stompClient = this.$store.getters.getStompClient;
       stompClient.send("/house/search", {}, JSON.stringify({}));
     },
+    swap(x,y,houseList){
+      let temp = houseList[x];
+      houseList[x] = houseList[y];
+      houseList[y] = temp;
+    },
+    compareLessThan(x,y,houseList){
+      if(houseList[x].needPwd ^ houseList[y].needPwd){
+        if(houseList[x].needPwd){
+            if(houseList[y].population > 0){
+              return true;
+            }else if(houseList[x].population > 0){
+              return false;
+            }else{
+              return true;
+            }
+        }else{
+             if(houseList[x].population > 0){
+              return false;
+            }else if(houseList[y].population > 0){
+              return true;
+            }else{
+              return false;
+            }
+        }
+      }else{
+        return houseList[x].population<houseList[y].population;
+      }
+    },
+    sortByPopulation(houseList){
+      let size = houseList.length;
+      for(let i = 0; i < size-1;i++){
+        for(let j = 0; j < size-i-1;j++ ){
+          if(this.compareLessThan(j,j+1,houseList)){
+            this.swap(j,j+1,houseList);
+          }
+        }
+      }
+      return houseList;
+    },
     getHomeHouses() {
        this.$http.post("/house/search",{})
         .then(response => {
           if(response.data.code=="20000"){
-            this.homeHouses = response.data.data;
+            this.homeHouses = this.sortByPopulation(response.data.data);
           }
          
         })
