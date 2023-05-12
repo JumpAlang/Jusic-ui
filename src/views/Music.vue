@@ -264,6 +264,9 @@
        <mu-icon left value="favorite"></mu-icon>
           赞赏</mu-button>
     </mu-flex>
+    <mu-flex class="flex-wrapper" justify-content="center" fill style="margin-top:10px;">
+        <mu-text-field v-model="houseSearch" placeholder="      点击输入房间名称搜索"></mu-text-field>
+    </mu-flex>
     <mu-flex class="flex-wrapper" justify-content="end" fill style="margin-top:10px;">
       <mu-button color="info" flat @click="linkDownload('http://www.alang.run/release')">
        <mu-icon left value="android"></mu-icon>
@@ -271,7 +274,7 @@
     </mu-flex>
     </mu-flex>
     <mu-flex class="flex-wrapper" justify-content="center" style="margin-top:10px;" wrap="wrap">
-      <mu-flex  v-for="house, index in homeHouses" :key="house.id" @click="enterHomeHouse(house.id,house.name,house.needPwd)">
+      <mu-flex  v-for="house, index in filteredHomeHouses" :key="house.id" @click="enterHomeHouse(house.id,house.name,house.needPwd)">
           <mu-tooltip  :content="house.desc">
 
            <mu-badge :content="house.population?house.population+'':'0'" circle :color="house.population>0?'info':''"  style="margin:8px 7px;" class="demo-icon-badge">
@@ -663,7 +666,7 @@
         <mu-flex class="flex-wrapper" justify-content="center">
             <mu-form :model="house" class="mu-demo-form" align="center">
              <div align="center">
-              <mu-text-field v-model="house.name" placeholder="房间名称"></mu-text-field>
+              <mu-text-field v-model="house.name" placeholder="房间名称搜索"></mu-text-field>
               <mu-text-field v-model="house.desc" placeholder="房间描述"></mu-text-field>
               <mu-text-field v-if="house.needPwd" placeholder="房间密码" v-model="house.password" :action-icon="visibility ? 'visibility_off' : 'visibility'"
                 :action-click="() => (visibility = !visibility)"
@@ -680,7 +683,7 @@
             </mu-form>
         </mu-flex>
       <mu-flex class="flex-wrapper" justify-content="center" style="padding-top:30px;" wrap="wrap"	>
-        <mu-flex   v-for="houseItem, index in houses"
+        <mu-flex   v-for="houseItem, index in filteredHouses"
           :key="houseItem.id"
           @click="enterHouse(houseItem.id,houseItem.name,houseItem.needPwd)" >
            <mu-tooltip :content="houseItem.desc">
@@ -934,6 +937,16 @@ export default {
     }
   },
   computed: {
+    filteredHomeHouses() {
+    return this.homeHouses.filter(house => {
+      return house.name.toLowerCase().indexOf(this.houseSearch.toLowerCase()) !== -1;
+    });
+    },
+    filteredHouses() {
+    return this.homeHouses.filter(house => {
+      return house.name.toLowerCase().indexOf(this.house.name.toLowerCase()) !== -1;
+    });
+    },
     ...mapGetters({
       isContented: "getIsConnected",
       online: "getSocketOnline",
@@ -1085,7 +1098,8 @@ export default {
       miniQrcode:'',
       currentTime:0,
       lyrics:{},
-      openLyrics:false
+      openLyrics:false,
+      houseSearch:''
    } ),
   methods: {
     play: function() {
