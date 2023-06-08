@@ -7,7 +7,7 @@
 let baseUrl = 'http://127.0.0.1';
 
 if (process.env.NODE_ENV === "development") {
-    baseUrl = "http://www.alang.run:8080";
+    baseUrl = "http://localhost:8888";
 } else if (process.env.NODE_ENV === "test") {
     baseUrl = "http://127.0.0.1:8080";
 } else if (process.env.NODE_ENV === "production") {

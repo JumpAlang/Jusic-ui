@@ -357,7 +357,13 @@
               :label="'QQ'"
               class="searchradio"
             ></mu-radio>
-           
+           <mu-radio
+              :value="'wydt'"
+              v-model="source"
+              color="primary"
+              :label="'电台'"
+              class="searchradio"
+            ></mu-radio>
             <mu-radio
               :value="'lz'"
               v-model="source"
@@ -365,6 +371,7 @@
               :label="'禁歌'"
               class="searchradio"
             ></mu-radio>
+             
             <a  @click="playCurrentPage">
                 <mu-avatar size="23" slot="avatar" style="margin-left:3px;">
                     <img src="../assets/images/play.png" title="播放当前页所有歌曲"/>
@@ -462,6 +469,13 @@
               v-model="sourceGd"
               color="primary"
               :label="'用户'"
+              class="searchradio2"
+            ></mu-radio>
+             <mu-radio
+              :value="'wy_userdj'"
+              v-model="sourceGd"
+              color="primary"
+              :label="'电台'"
               class="searchradio2"
             ></mu-radio>
             <mu-radio
@@ -589,6 +603,9 @@
                 <mu-icon :value="'reply'"></mu-icon>
                 </a>
                 {{ scope3.row.nickname }}
+                 <a  @click="djtableDetail(scope3.row)" >
+                   <font style="color:orange !important;">电台</font>
+                </a>
               </td>
               <td class="is-center">
                 <mu-avatar size="36">
@@ -1922,7 +1939,7 @@ export default {
        this.openSearchGd = false;
        this.openSearch = true;
        this.$store.commit("setSearchKeyword",  "*"+value.id);
-       this.source = this.sourceGd.startsWith("wy")?"wy":"qq";
+       this.source = this.sourceGd.startsWith("wy")?(this.sourceGd.endsWith("userdj")?"wydt":"wy"):"qq";
        this.current = 1;
        this.search();
     },
@@ -1931,6 +1948,14 @@ export default {
        this.openSearchGd = true;
        this.$store.commit("setSearchKeywordGd",  value.userId);
        this.sourceGd = this.sourceUser+"_user";
+       this.currentGd = 1;
+       this.searchGd();
+    },
+     djtableDetail(value) {
+       this.openSearchUser = false;
+       this.openSearchGd = true;
+       this.$store.commit("setSearchKeywordGd",  value.userId);
+       this.sourceGd = this.sourceUser+"_userdj";
        this.currentGd = 1;
        this.searchGd();
     },
