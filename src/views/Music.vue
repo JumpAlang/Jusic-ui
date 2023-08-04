@@ -244,7 +244,7 @@
         <img :src="music.pictureUrl" alt="blur-img" />
       </div>
       <div>
-        <audio
+        <audio rel="noreferrer"
           id="music"
           :src="music.url"
           @timeupdate="musicTimeUpdate"
@@ -960,7 +960,7 @@ export default {
     });
     },
     filteredHouses() {
-    return this.homeHouses.filter(house => {
+    return this.houses.filter(house => {
       return house.name.toLowerCase().indexOf(this.house.name.toLowerCase()) !== -1;
     });
     },
