@@ -264,14 +264,17 @@
        <mu-icon left value="favorite"></mu-icon>
           赞赏</mu-button>
     </mu-flex>
-    <mu-flex class="flex-wrapper" justify-content="center" fill style="margin-top:10px;">
-        <mu-text-field v-model="houseSearch" placeholder="      点击输入房间名称搜索"></mu-text-field>
-    </mu-flex>
     <mu-flex class="flex-wrapper" justify-content="end" fill style="margin-top:10px;">
       <mu-button color="info" flat @click="linkDownload('http://www.alang.run/release')">
        <mu-icon left value="android"></mu-icon>
           APP</mu-button>
     </mu-flex>
+    </mu-flex>
+    <mu-flex class="flex-wrapper" align-items="center">
+      <mu-flex class="flex-wrapper" justify-content="center" fill >
+        <mu-text-field v-model="houseSearch" placeholder="房间搜索" style="width:150px"></mu-text-field>
+        <mu-switch v-model="houseHide" color="primary" @change="hideChange" label="隐藏空房" style="padding-top:4px"></mu-switch>   
+      </mu-flex> 
     </mu-flex>
     <mu-flex class="flex-wrapper" justify-content="center" style="margin-top:10px;" wrap="wrap">
       <mu-flex  v-for="house, index in filteredHomeHouses" :key="house.id" @click="enterHomeHouse(house.id,house.name,house.needPwd)">
@@ -678,6 +681,7 @@
       fullscreen
       :open.sync="openHouse">
       <mu-appbar color="primary" title="房间">
+        <mu-button slot="right" flat @click="innerHouseHide=!innerHouseHide">{{innerHouseHide?'显示空房':'隐藏空房'}}</mu-button>
         <mu-button slot="right" flat @click="closeHouse">X</mu-button>
       </mu-appbar>
         <mu-flex class="flex-wrapper" justify-content="center">
@@ -956,12 +960,12 @@ export default {
   computed: {
     filteredHomeHouses() {
     return this.homeHouses.filter(house => {
-      return house.name.toLowerCase().indexOf(this.houseSearch.toLowerCase()) !== -1;
+      return house.name.toLowerCase().indexOf(this.houseSearch.toLowerCase()) !== -1 && (this.houseHide?house.population > 0:true);
     });
     },
     filteredHouses() {
     return this.houses.filter(house => {
-      return house.name.toLowerCase().indexOf(this.house.name.toLowerCase()) !== -1;
+      return house.name.toLowerCase().indexOf(this.house.name.toLowerCase()) !== -1 && (this.innerHouseHide?house.population > 0:true);
     });
     },
     ...mapGetters({
@@ -1116,7 +1120,9 @@ export default {
       currentTime:0,
       lyrics:{},
       openLyrics:false,
-      houseSearch:''
+      houseSearch:'',
+      houseHide:false,
+      innerHouseHide:false
    } ),
   methods: {
     play: function() {
