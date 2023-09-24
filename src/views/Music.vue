@@ -260,12 +260,12 @@
     <div id="play" v-if="!isPlay" :style="backgroundDiv" >
     <mu-flex class="flex-wrapper" align-items="center">
        <mu-flex class="flex-wrapper" justify-content="start" fill style="margin-top:10px;">
-      <mu-button color="info" flat @click="linkDownload('http://www.alang.run/sponsor')">
+      <mu-button color="info" flat @click="linkDownload('https://tx.alang.run/sponsor')">
        <mu-icon left value="favorite"></mu-icon>
           赞赏</mu-button>
     </mu-flex>
     <mu-flex class="flex-wrapper" justify-content="end" fill style="margin-top:10px;">
-      <mu-button color="info" flat @click="linkDownload('http://www.alang.run/release')">
+      <mu-button color="info" flat @click="linkDownload('https://tx.alang.run/release')">
        <mu-icon left value="android"></mu-icon>
           APP</mu-button>
     </mu-flex>
@@ -307,7 +307,7 @@
           :type="visibility ? 'text' : 'password'"
           ></mu-text-field>
             <mu-text-field  action-icon="favorite"
-          :action-click="() => (linkDownload('http://www.alang.run/sponsor'))" v-if="homeHouse.enableStatus" v-model="homeHouse.retainKey" placeholder="赞赏200大洋订单号"></mu-text-field>
+          :action-click="() => (linkDownload('https://tx.alang.run/sponsor'))" v-if="homeHouse.enableStatus" v-model="homeHouse.retainKey" placeholder="赞赏200大洋订单号"></mu-text-field>
           
             </div>
         <mu-flex class="flex-wrapper" align-items="center">
@@ -693,7 +693,7 @@
                 :action-click="() => (visibility = !visibility)"
                 :type="visibility ? 'text' : 'password'"
               ></mu-text-field>
-               <mu-text-field action-icon="favorite" :action-click="() => (linkDownload('http://www.alang.run/sponsor'))" v-if="house.enableStatus" v-model="house.retainKey" placeholder="赞赏200大洋订单号"></mu-text-field>
+               <mu-text-field action-icon="favorite" :action-click="() => (linkDownload('https://tx.alang.run/sponsor'))" v-if="house.enableStatus" v-model="house.retainKey" placeholder="赞赏200大洋订单号"></mu-text-field>
               </div>
 
               <mu-flex class="flex-wrapper" align-items="center">
@@ -931,7 +931,7 @@ import { mapGetters, mapMutations } from "vuex";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { sendUtils, messageUtils, timeUtils, musicUtils } from "../utils";
-import { baseUrl, isProduction } from "../config/environment";
+import { baseUrl, isProduction,kuwoHttps } from "../config/environment";
 import Navigation from "../components/Navigation";
 import ChatSearchPicture from "../components/ChatSearchPicture";
 import BiliLive from "../components/BiliLive";
@@ -1690,7 +1690,24 @@ export default {
             this.lastLyric="";
             this.$store.commit("setPlayerLyric", "");
             this.firstLoaded = 0;
-            messageContent.data.url = messageContent.data.url+"?timestamp="+Date.now();
+            if(kuwoHttps != "" && messageContent.data.url.indexOf("kuwo.cn") != -1 && messageContent.data.url.indexOf("-") == -1){
+              let urls = messageContent.data.url.split(".sycdn.");
+              let headUrls = urls[0].replace('http://','').split(".");
+              let lastHeadUrl = headUrls[headUrls.length-1];
+              messageContent.data.url = 'https://'+lastHeadUrl+"-sycdn."+urls[1]+"&timestamp="+Date.now();
+              //messageContent.data.url = kuwoHttps +"?timestamp="+Date.now()+"&targetUrl="+messageContent.data.url;
+            }else{
+              if(messageContent.data.url.indexOf("?") != -1){
+              messageContent.data.url = messageContent.data.url+"&timestamp="+Date.now();
+              }else{
+              messageContent.data.url = messageContent.data.url+"?timestamp="+Date.now();
+              }
+            }
+            messageContent.data.url = messageContent.data.url.replace("http://","https://");
+            // console.log("看这里");
+            // console.log(messageContent.data.url);
+            // console.log(kuwoHttps);
+            // console.log(messageContent.data.url.indexOf("kuwo.cn") != -1);
             this.$store.commit("setPlayerMusic", messageContent.data);
             document.querySelector("#music").preload = "auto";
             if (
@@ -2221,6 +2238,9 @@ export default {
        this.$http.post("/house/search",{})
         .then(response => {
           if(response.data.code=="20000"){
+            if(response.data.data[0].announce && response.data.data[0].announce.content){
+                    this.$toast.message({message:response.data.data[0].announce.content,time: 30*1000, closeIcon: 'close',close:true})
+            }
             this.homeHouses = this.sortByPopulation(response.data.data);
           }
          
@@ -2266,8 +2286,7 @@ export default {
         })
         .catch(error => {
         })
-      let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd;
-      this.qrcodeVue.value = "http://music.alang.run?"+encodeURIComponent(queryString);	// 二维码内容
+      this.qrcodeVue.value = this.joinUrl();
     },
      getMiniCode() {
        this.$http.post("/house/getMiniCode",{  id: this.houseId})
@@ -2281,8 +2300,12 @@ export default {
         })
         .catch(error => {
         })
+      this.qrcodeVue.value = this.joinUrl();
+    },
+    joinUrl(){
       let queryString = "houseId="+this.houseId+"&housePwd="+this.housePwd;
-      this.qrcodeVue.value = "http://music.alang.run?"+encodeURIComponent(queryString);	// 二维码内容
+      let index = location.href.replace("//","||").indexOf("/");
+      return (location.href.substring(0,index+1))+"?"+encodeURIComponent(queryString);	// 二维码内容
     },
     reachHouse(){
       let housePwd = this.getUrlKey("housePwd");
@@ -2561,7 +2584,6 @@ export default {
     this.getScreenWidth();
      this.$nextTick(function () {
       this.$http.defaults.baseURL = baseUrl;
-
       this.getHomeHouses();
       try{
           let houseId = this.getUrlKey("houseId");

@@ -70,7 +70,7 @@ export default {
   methods: {
     async getRoomId(id) {
       const response = await fetch(
-        `http://tx.alang.run/bili/room/v1/Room/room_init?id=${id}`
+        `https://tx.alang.run/bili/room/v1/Room/room_init?id=${id}`
       );
       if (response.status >= 200 && response.status < 300) {
         let text = await response.json();
@@ -87,7 +87,7 @@ export default {
     },
     async getWebSocketHost(roomid) {
       const response = await fetch(
-        `http://tx.alang.run/bili/room/v1/Danmu/getConf?room_id=${roomid}&platform=pc&player=web`
+        `https://tx.alang.run/bili/room/v1/Danmu/getConf?room_id=${roomid}&platform=pc&player=web`
       );
       if (response.status >= 200 && response.status < 300) {
         let text = await response.json();

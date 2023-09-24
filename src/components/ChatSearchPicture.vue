@@ -20,9 +20,9 @@
             <mu-grid-list class="gridlist-demo">
                 <mu-col span="4" sm="4" md="3" lg="2" xl="2" v-for="(item, index) in searchPictureData"
                         style="position: relative">
-                    <img :src="item.url" style="width: 100%">
+                    <img :src="'https://tx.alang.run/doutu' + item.url.slice(item.url.lastIndexOf('/'))" style="width: 100%">
                     <div style="position: absolute; bottom: 0; width: 100%; text-align: right; background-color: rgba(0, 0, 0, 0.75);">
-                        <mu-button slot="action" icon @click="send(item.url)">
+                        <mu-button slot="action" icon @click="send('https://tx.alang.run/doutu' + item.url.slice(item.url.lastIndexOf('/')))">
                             <mu-icon value="send"></mu-icon>
                         </mu-button>
                     </div>
