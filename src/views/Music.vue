@@ -273,7 +273,7 @@
     <mu-flex class="flex-wrapper" align-items="center">
       <mu-flex class="flex-wrapper" justify-content="center" fill >
         <mu-text-field v-model="houseSearch" placeholder="房间搜索" style="width:150px"></mu-text-field>
-        <mu-switch v-model="houseHide" color="primary" @change="hideChange" label="隐藏空房" style="padding-top:4px"></mu-switch>   
+        <mu-switch v-model="houseHide" color="primary" label="隐藏空房" style="padding-top:4px"></mu-switch>   
       </mu-flex> 
     </mu-flex>
     <mu-flex class="flex-wrapper" justify-content="center" style="margin-top:10px;" wrap="wrap">
@@ -432,7 +432,7 @@
             <mu-pagination
               :total="searchCount"
               :current.sync="current"
-              :page-count="pageCount"
+              :page-count="pageCountCompute"
               :page-size="limit"
               @change="paginationChange"
             ></mu-pagination>
@@ -544,7 +544,7 @@
             <mu-pagination
               :total="searchCountGd"
               :current.sync="currentGd"
-              :page-count="pageCount"
+              :page-count="pageCountCompute"
               :page-size="limit"
               @change="paginationChangeGd"
             ></mu-pagination>
@@ -629,7 +629,7 @@
             <mu-pagination
               :total="searchCountUser"
               :current.sync="currentUser"
-              :page-count="pageCount"
+              :page-count="pageCountCompute"
               :page-size="limit"
               @change="paginationChangeUser"
             ></mu-pagination>
@@ -911,14 +911,14 @@
             </mu-button>
       </mu-sub-header>
   
-      <mu-list-item v-for="(value,name,index) in favoriteMap">
-       <mu-list-item-action @click="removeCollect(value)" style="width:10%;">
+      <mu-list-item v-for="(item,index) in sortCollect" :key="item.key">
+       <mu-list-item-action @click="removeCollect(item.value)" style="width:10%;">
           <mu-icon value="favorite" color="red"></mu-icon>
         </mu-list-item-action>
-         <mu-list-item-action @click="pickMusicNoToast(value)"  style="width:10%;">
+         <mu-list-item-action @click="pickMusicNoToast(item.value)"  style="width:10%;">
           <mu-icon value="play_arrow" color="teal"></mu-icon>
         </mu-list-item-action>
-        <mu-list-item-title  style="width:80%;">{{index+1}}.{{value.name}}|{{value.artist}}|{{value.album.name}}</mu-list-item-title>
+        <mu-list-item-title  style="width:80%;">{{index+1}}.{{item.value.name}}|{{item.value.artist}}|{{item.value.album.name}}</mu-list-item-title>
          
       </mu-list-item>
     </mu-list>
@@ -958,6 +958,26 @@ export default {
     }
   },
   computed: {
+    pageCountCompute(){
+      if(!this.pageCount || this.pageCount < 5){
+        return 5
+      }
+      return this.pageCount % 2 == 0? this.pageCount+1:this.pageCount;
+    },
+    sortCollect(){
+      // 将对象的键值对转换为数组
+      const array = Object.entries(this.favoriteMap);
+
+      // 使用 JavaScript 的 sort 方法对数组按 name 字段排序
+      array.sort((a, b) => {
+        return b[1].pickTime-a[1].pickTime;
+      });
+
+      // 将排序后的数组映射为包含键值对的对象
+      return array.map(([key, value]) => {
+        return { key, value };
+      });
+    },
     filteredHomeHouses() {
     return this.homeHouses.filter(house => {
       return house.name.toLowerCase().indexOf(this.houseSearch.toLowerCase()) !== -1 && (this.houseHide?house.population > 0:true);
@@ -2341,6 +2361,7 @@ export default {
        this.search();
     },
     collectMusic(row){
+      row.pickTime = new Date().getTime();
       this.$set(this.favoriteMap, row.id, row)
 
       // this.favoriteMap[row.id]= row;
