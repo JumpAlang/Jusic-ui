@@ -69,9 +69,15 @@ export default {
   },
   methods: {
     async getRoomId(id) {
-      const response = await fetch(
-        `https://tx.alang.run/bili/room/v1/Room/room_init?id=${id}`
-      );
+      const response =  await fetch('https://blc-proxy.lolicon.app', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url:`https://api.live.bilibili.com/room/v1/Room/room_init?id=${id}` }),
+    referrerPolicy: 'origin',
+  });
+      // const response = await fetch(
+      //   `https://tx.alang.run/bili/room/v1/Room/room_init?id=${id}`,{method:'POST',headers:{Cookie:'sss'}}
+      // );
       if (response.status >= 200 && response.status < 300) {
         let text = await response.json();
         console.log(text);
@@ -86,9 +92,15 @@ export default {
       }
     },
     async getWebSocketHost(roomid) {
-      const response = await fetch(
-        `https://tx.alang.run/bili/room/v1/Danmu/getConf?room_id=${roomid}&platform=pc&player=web`
-      );
+      const response =  await fetch('https://blc-proxy.lolicon.app', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url:`https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id=${roomid}&type=0` }),
+    referrerPolicy: 'origin',
+  });
+      // const response = await fetch(
+      //   `https://tx.alang.run/bili/room/v1/Danmu/getConf?room_id=${roomid}&platform=pc&player=web`
+      // );
       if (response.status >= 200 && response.status < 300) {
         let text = await response.json();
         //console.log(text);
@@ -118,7 +130,7 @@ export default {
       console.log("roomId", realRoomId);
       let realData = await this.getWebSocketHost(realRoomId);
       console.log("realData", realData);
-      this.socket = new WebSocket(`wss://${realData.host}/sub`);
+      this.socket = new WebSocket(`wss://${realData.host_list[0].host}/sub`);
       this.socket.binaryType = "arraybuffer";
       this.socket.addEventListener("open", () => {
         const joinData = {

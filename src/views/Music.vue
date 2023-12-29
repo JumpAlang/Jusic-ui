@@ -1723,6 +1723,9 @@ export default {
               messageContent.data.url = messageContent.data.url+"?timestamp="+Date.now();
               }
             }
+            if(messageContent.data.url.indexOf("/ymusic/") != -1){
+              messageContent.data.url = messageContent.data.url.replace(/(m\d+?)(?!c)\.music\.126\.net/,"$1c.music.126.net");
+            }
             messageContent.data.url = messageContent.data.url.replace("http://","https://");
             // console.log("看这里");
             // console.log(messageContent.data.url);
