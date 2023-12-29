@@ -37,7 +37,7 @@
 <script>
 // import axios from 'axios';
 // import brotli from 'brotli/decompress';
-
+import { baseUrl } from "../config/environment";
 export default {
   components: {},
   props: {
@@ -69,21 +69,21 @@ export default {
   },
   methods: {
     async getRoomId(id) {
-      const response =  await fetch('https://blc-proxy.lolicon.app', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url:`https://api.live.bilibili.com/room/v1/Room/room_init?id=${id}` }),
-    referrerPolicy: 'origin',
-  });
-      // const response = await fetch(
-      //   `https://tx.alang.run/bili/room/v1/Room/room_init?id=${id}`,{method:'POST',headers:{Cookie:'sss'}}
-      // );
+  //     const response =  await fetch('https://blc-proxy.lolicon.app', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ url:`https://api.live.bilibili.com/room/v1/Room/room_init?id=${id}` }),
+  //   referrerPolicy: 'origin',
+  // });
+      const response = await fetch(
+        `${baseUrl}/bili/room_init/${id}`
+      );
       if (response.status >= 200 && response.status < 300) {
         let text = await response.json();
         console.log(text);
 
-        if (text.code == 0) {
-          return text.data;
+        if (text.code == '20000') {
+          return text.data.data;
         } else {
           return {};
         }
@@ -92,21 +92,21 @@ export default {
       }
     },
     async getWebSocketHost(roomid) {
-      const response =  await fetch('https://blc-proxy.lolicon.app', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url:`https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id=${roomid}&type=0` }),
-    referrerPolicy: 'origin',
-  });
-      // const response = await fetch(
-      //   `https://tx.alang.run/bili/room/v1/Danmu/getConf?room_id=${roomid}&platform=pc&player=web`
-      // );
+  //     const response =  await fetch('https://blc-proxy.lolicon.app', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ url:`https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id=${roomid}&type=0` }),
+  //   referrerPolicy: 'origin',
+  // });
+      const response = await fetch(
+        `${baseUrl}/bili/getDanmuInfo/${roomid}`
+      );
       if (response.status >= 200 && response.status < 300) {
         let text = await response.json();
         //console.log(text);
 
-        if (text.code == 0) {
-          return text.data;
+        if (text.code == '20000') {
+          return text.data.data;
         } else {
           return {};
         }
