@@ -1,5 +1,5 @@
 # Jusic-ui
-一起听歌吧<https://github.com/JumpAlang/Jusic-serve>的前端
+一起听歌吧<https://github.com/xiaoxin0125/Jusic-ui/>的前端
 
 # Jusic-ui
 
