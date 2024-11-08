@@ -226,16 +226,23 @@
                   color="primary"
                   style="width: 80%"
                 >发送消息</mu-button>
-                 <mu-button ref="emojiBtn" icon @click="emojiPickerVisible = !emojiPickerVisible" style="font-size:20px">😃  
+                 <mu-button ref="emojiBtn" icon  style="font-size:20px" @click="openEmojiBotttomSheet">😃  
               </mu-button>
+                <!-- <mu-menu cover>
+                 <mu-button ref="emojiBtn" icon  style="font-size:20px">😃  
+              </mu-button>
+              <mu-list slot="content">
+                                  <v-emoji-picker @select="onSelectEmoji" :showSearch="false" :showCategories="true" :dark="true" style="width: 100%; height: 200px;" />
+                </mu-list>
+                </mu-menu> -->
                 <mu-button icon @click="openBotttomSheet" >
                     <mu-icon value="favorite" color="red"></mu-icon>
                 </mu-button>
                 <!-- 悬浮按钮，鼠标悬浮时显示 emoji picker -->
-                <mu-popover cover :trigger="trigger" placement="bottom" :open.sync="emojiPickerVisible">
+                <!-- <mu-popover cover :trigger="trigger" placement="bottom" :open.sync="emojiPickerVisible"> -->
                 <!-- Popover 内容 -->
-                  <v-emoji-picker @select="onSelectEmoji" :showSearch="false" :showCategories="true" :dark="true" style="width: 100%; height: 200px;" />
-                </mu-popover>
+                  <!-- <v-emoji-picker @select="onSelectEmoji" :showSearch="false" :showCategories="true" :dark="true" style="width: 100%; height: 200px;" /> -->
+                <!-- </mu-popover> -->
                 </mu-flex>
       
                   <div style="padding-top: 10px;">
@@ -991,6 +998,11 @@
       </mu-list-item>
     </mu-list>
   </mu-bottom-sheet>
+  <mu-bottom-sheet class="sheet half-width-right" :open.sync="emojiPickerVisible" >
+      <div style="overflow-y: auto; max-height: 100%;"> <!-- 额外的 div 作为滚动容器 -->
+        <v-emoji-picker @select="onSelectEmoji" :showSearch="false"  :dark="true" style="width: 100%;" />
+      </div>
+  </mu-bottom-sheet>
   </div>
 </template>
 
@@ -1102,7 +1114,7 @@ export default {
     }
   },
   data: () => ({
-          trigger: null,
+          // trigger: null,
           emojiPickerVisible: false, // 控制表情选择器的显示状态
     isPlay: false,
     columns: [
@@ -1267,7 +1279,7 @@ export default {
       stompClient.connect(
         {},
         frame => {
-                this.trigger = this.$refs.emojiBtn.$el;
+                // this.trigger = this.$refs.emojiBtn.$el;
 
           // console.log('连接到服务器成功！', frame);
           this.$store.commit("setSocketIsConnected", true);
@@ -1810,18 +1822,18 @@ export default {
                 this.$store.commit("setMusic2", { url: this.secondUrl });
               }
             }
-            for(var i = 0; i < messageContent.data.length; i++){
-              let itemIndex = this.containsArray(this.pickHistoryList,messageContent.data[i]);
-              if(itemIndex != -1){
-                this.pickHistoryList.splice(itemIndex,1);
-              }else{
-                if(this.pickHistoryList.length > 1000){
-                  this.pickHistoryList.pop();
-                }  
-              }
-              this.pickHistoryList.unshift(messageContent.data[i]);
-            }
-            localStorage.setItem("pickHistory",JSON.stringify(this.pickHistoryList));
+            // for(var i = 0; i < messageContent.data.length; i++){
+            //   let itemIndex = this.containsArray(this.pickHistoryList,messageContent.data[i]);
+            //   if(itemIndex != -1){
+            //     this.pickHistoryList.splice(itemIndex,1);
+            //   }else{
+            //     if(this.pickHistoryList.length > 399){
+            //       this.pickHistoryList.pop();
+            //     }  
+            //   }
+            //   this.pickHistoryList.unshift(messageContent.data[i]);
+            // }
+            // localStorage.setItem("pickHistory",JSON.stringify(this.pickHistoryList));
             break;
           case messageUtils.messageType.VOLUMN:
             //console.log(messageContent.data);
@@ -1871,6 +1883,17 @@ export default {
               );
             }
             document.title = messageContent.data.name;
+            messageContent.data.lyric = '';
+              let itemIndex = this.containsArray(this.pickHistoryList,messageContent.data);
+              if(itemIndex != -1){
+                this.pickHistoryList.splice(itemIndex,1);
+              }else{
+                if(this.pickHistoryList.length > 399){
+                  this.pickHistoryList.pop();
+                }  
+              }
+              this.pickHistoryList.unshift(messageContent.data);
+            localStorage.setItem("pickHistory",JSON.stringify(this.pickHistoryList));
             break;
           case messageUtils.messageType.AUTH_ROOT:
             this.$store.commit("pushChatData", {
@@ -2513,6 +2536,9 @@ export default {
     openBotttomSheet () {
       this.open = true;
     },
+    openEmojiBotttomSheet(){
+      this.emojiPickerVisible=true;
+    },
     openBotttomPickHistorySheet () {
       this.openPickHistory = true;
     },
@@ -2877,7 +2903,21 @@ export default {
 .album-rotate {
   animation: rotate 20s linear infinite;
 }
+.half-width-right {
+  width: 100%;
+  right: 0;
+  left: auto;
+  max-height: 150px;
+  overflow-y: auto; /* 允许组件滚动 */
+}
 
+@media (min-width: 768px) {
+  .half-width-right {
+    width: 30%;
+    right: 13%;
+    max-height: 300px;
+  }
+}
 @keyframes rotate {
   from {
     transform: rotate(0deg);
