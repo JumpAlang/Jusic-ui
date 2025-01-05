@@ -150,16 +150,22 @@
                  <mu-button flat color="white"  @click="houseUser">
                   <mu-icon left value="supervisor_account"></mu-icon>
                       {{online}}
-                </mu-button >
-                  <mu-button flat color="white"  @click="clearScr" style="float:right;">
-                  <mu-icon left value="clear_all"></mu-icon>
-                      
-                </mu-button>
-              
+                </mu-button>                 
+                <div style="padding-top:4px;float:right;" class="mu-button mu-flat-button">
+                  <a @click="toggleChat">
+                    <mu-icon left  value="chat" flat :color="toggleChatColor"></mu-icon>
+                  </a>
+                  &nbsp;
+                  <a @click="toggleMusic">
+                   <mu-icon left  value="audiotrack" flat :color="toggleMusicColor"></mu-icon>&nbsp;
+                  </a>
+                  <mu-icon left value="clear_all" flat color="white"  @click="clearScr"></mu-icon>
+
+                </div>   
               </div>
               <div id="chat-container">
                 <div
-                  v-for="(item, index) in chatData"
+                  v-for="(item, index) in filteredChatData"
                   :style="item.type === 'notice' ? 'text-align: center' : ''"
                   style="padding: 10px 0"
                 >
@@ -1039,6 +1045,25 @@ export default {
     }
   },
   computed: {
+     filteredChatData() {
+      return this.chatData.filter(item => {
+        if (this.toggleChatColor === 'white' && this.toggleMusicColor === 'white'){
+          return true;
+        }
+        if (this.toggleChatColor === 'white') {
+          // toggleDisplay == 1时，展示点歌开头消息和投票切歌、notice类型的消息
+          return (
+            !(item.content.startsWith("点歌 ") || item.content === "点歌成功")
+          );
+        } 
+       if (this.toggleMusicColor === "white") {
+          return (
+            item.content.startsWith("点歌 ") || item.content === "点歌成功"
+          );
+        }
+        return false;
+      });
+    },
     pageCountCompute(){
       if(!this.pageCount || this.pageCount < 5){
         return 5
@@ -1233,9 +1258,25 @@ export default {
       houseSearch:'',
       houseHide:false,
       innerHouseHide:false,
-      pickSearch:null
+      pickSearch:null,
+      toggleChatColor:'white',
+      toggleMusicColor:'white'
    } ),
   methods: {
+    toggleChat(){
+      if(this.toggleChatColor == 'white'){
+        this.toggleChatColor = 'gray';
+      }else{
+        this.toggleChatColor = 'white';
+      }
+    },
+    toggleMusic(){
+      if(this.toggleMusicColor == 'white'){
+        this.toggleMusicColor = 'gray';
+      }else{
+        this.toggleMusicColor = 'white';
+      }
+    },
     onSelectEmoji(emoji){
              let input = document.getElementById("chatInput");
         let startPos = input.selectionStart;
@@ -2424,7 +2465,9 @@ export default {
      
     },
     clearScr() {
-      document.getElementById("chat-container").innerHTML = "";
+
+      // document.getElementById("chat-container").innerHTML = "";
+      this.$store.commit("setChatData", []);
     },
     setCurrentTime() {
       this.playingId= this.$store.getters.getPlayerMusic.id + this.$store.getters.getPlayerMusic.source+this.$store.getters.getPlayerMusic.pushTime;

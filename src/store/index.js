@@ -257,6 +257,9 @@ export default new Vuex.Store({
         },
         setSearchPictureCount: (state, value) => {
             state.search.picture.count = value
+        },
+        setChatData:(state,value)=>{
+            state.chat.data = value;
         }
     },
     actions: {},
